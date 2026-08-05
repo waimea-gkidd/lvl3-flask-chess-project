@@ -1,4 +1,4 @@
-# ... Project
+# Chess Project
 
 ## Project Description
 
@@ -13,7 +13,7 @@ The app has the following key features:
 
 ## Supporting Documents
 
-All documentation is hosted on [Github Pages](https://waimea-gkidd.github.io/lvl3-flask-project/)
+All documentation is hosted on [Github Pages](https://waimea-gkidd.github.io/lvl3-flask-chess-project/)
 
 Task Instructions:
 - [Instruction documents](docs/instructions/)

@@ -2,7 +2,7 @@
 
 ## Identified Problem or Need
 
-Rami, the oner of Chess in Nelson (I.e. The Nelson Chess club), CURRENTLY tracks his fortnightly Teams Tournaments manually using a spreadsheet (barbaric I know). At the end of each and every session, Rami works out which players have the highest points (selection of captains), note who was in which team (winning/lossing), and he updates all these by himself. This process is time consuming, could come with errors, and the system (as of currently) is of a poor grade for members to check standings themselves. I believe there is a genuine need for a web-based system to handle the Nelson Chess club, results, clients, and maybe even more if time allows.
+Rami, the owner of Chess in Nelson (I.e. The Nelson Chess club), CURRENTLY tracks his fortnightly Teams Tournaments manually using a spreadsheet (barbaric I know). At the end of each and every session, Rami works out which players have the highest points (selection of captains), note who was in which team (winning/lossing), and he updates all these by himself. This process is time consuming, could come with errors, and the system (as of currently) is of a poor grade for members to check standings themselves. I believe there is a genuine need for a web-based system to handle the Nelson Chess club, results, clients, and maybe even more if time allows.
 Rami also tracks normal club meetings so that he knows who was there and who owes him for said session. 
 Rami also has classes where he teaches a range of things different ages and skill levels.
 

@@ -38,12 +38,12 @@ class PlayerTable:
     """
 
     SEED_DATA = """
-        INSERT INTO players (name)
+        INSERT INTO players (id, name)
         VALUES
-            ("Alice"),
-            ("Bob"),
-            ("Charlie"),
-            ("Dana")
+            ("1","Alice"),
+            ("2","Bob"),
+            ("3","Charlie"),
+            ("4","Dana")
     """
 
 

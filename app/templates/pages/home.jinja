@@ -1,0 +1,19 @@
+{#=====================================================
+  Home page
+=====================================================#}
+
+{% extends 'pages/_base.jinja' %}
+
+
+{% block content %}
+
+    <h2>Nelson Chess Club</h2>
+
+    <div class="tournament">
+        <h3>Teams Tournament</h3>
+        <p>{{ tt_day }} | {{ tt_location }}</p>
+        <p>{{ tt_detail }}</p>
+        <a href="/tournament">View Teams Tournament</a>
+    </div>
+
+{% endblock %}

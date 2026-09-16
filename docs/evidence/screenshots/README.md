@@ -5,5 +5,5 @@ Any screenshots or video captures should be placed into this `screenshots` folde
 To place the image into your document, the markdown is:
 ```markdown
 ![](screensots/filename)
-```
+```![alt text](image.png)
 

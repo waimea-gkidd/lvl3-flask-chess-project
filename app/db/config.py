@@ -23,9 +23,9 @@ class UserTable:
     SEED_DATA = """
         INSERT INTO users (forename, surname, username, pass_hash)
         VALUES
-            ("Rami", "Admin", "rami", "scrypt:32768:8:1$n7eJTucLbaGmUpAM$c1776374a8d456a6eaf61bccc08db5e1fcc4ff3b3983d364c45ab13074255eeae0a393afb11f99a9fe63fb1d980992ace17a72ba70324523b11e92e36cbe4252")
+            ("Flumph", "Testington", "flumph42", "scrypt:32768:8:1$n7eJTucLbaGmUpAM$c1776374a8d456a6eaf61bccc08db5e1fcc4ff3b3983d364c45ab13074255eeae0a393afb11f99a9fe63fb1d980992ace17a72ba70324523b11e92e36cbe4252")
     """
-
+    ## schema.md stated that the given hash password = "test"
 class PlayerTable:
 
     NAME = "players"
@@ -38,12 +38,12 @@ class PlayerTable:
     """
 
     SEED_DATA = """
-        INSERT INTO players (id, name)
+        INSERT INTO players (name)
         VALUES
-            ("1","Alice"),
-            ("2","Bob"),
-            ("3","Charlie"),
-            ("4","Dana")
+            ("Alice"),
+            ("Bob"),
+            ("Charlie"),
+            ("Dana")
     """
 
 
@@ -75,11 +75,11 @@ class TournamentTable:
     SCHEMA = """
         CREATE TABLE tournaments (
             id          INTEGER PRIMARY KEY AUTOINCREMENT,
-            semester_id INTEGER,
-            phase_id    INTEGER,
-            team1_id    INTEGER,
-            team2_id    INTEGER,
-            win_id      INTEGER,
+            semester_id INTEGER NOT NULL,
+            phase_id    INTEGER NOT NULL,
+            team1_id    INTEGER NOT NULL,
+            team2_id    INTEGER NOT NULL,
+            win_id      INTEGER NOT NULL,
 
             FOREIGN KEY(team1_id) REFERENCES members(team_id),
             FOREIGN KEY(team2_id) REFERENCES members(team_id),
@@ -97,7 +97,6 @@ class TournamentTable:
 
 
 TABLES = [
-    UserTable,
     PlayerTable,
     MemberTable,
     TournamentTable,

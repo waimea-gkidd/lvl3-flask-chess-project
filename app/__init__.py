@@ -24,18 +24,35 @@ app = Flask(__name__)
 # Home page - Show the Teams Tournament info
 #-----------------------------------------------------------
 @app.get("/")
+@login_required
 def show_home():
-    # Hardcoded for now - there's no database table for the
-    # Teams Tournament schedule yet
+    # day/location still hardcoded - not stored in the DB
     tt_day = "Wed"
     tt_location = "Tahunanui Community Hub"
-    tt_detail = "Phase 7/10"
+
+    with connect_db() as db:
+        sql = """
+            SELECT semester_id, phase_id
+            FROM tournaments
+            ORDER BY id DESC
+            LIMIT 1
+        """
+        params = ()
+        tournament = db.execute(sql, params).fetchone()
+
+    if tournament:
+        tt_semester = tournament["semester_id"]
+        tt_phase = tournament["phase_id"]
+    else:
+        tt_semester = None
+        tt_phase = None
 
     return render_template(
         "pages/home.jinja",
         tt_day=tt_day,
         tt_location=tt_location,
-        tt_detail=tt_detail,
+        tt_semester=tt_semester,
+        tt_phase=tt_phase,
     )
 
 
@@ -43,12 +60,14 @@ def show_home():
 # Teams Tournament page - placeholder for now
 #-----------------------------------------------------------
 @app.get("/tournament")
+@login_required
 def show_tournament():
     return render_template("pages/tournament.jinja")
 
 
 #-----------------------------------------------------------
 # Sign in page
+# auth.md
 #-----------------------------------------------------------
 @app.get("/login")
 def show_login_form():
@@ -57,6 +76,7 @@ def show_login_form():
 
 #-----------------------------------------------------------
 # Process sign in
+# auth.md
 #-----------------------------------------------------------
 @app.post("/login")
 def login_user():
@@ -94,12 +114,14 @@ def login_user():
 
 #-----------------------------------------------------------
 # Logout
+# auth.md
 #-----------------------------------------------------------
 @app.get("/logout")
 def logout_user():
     session.clear()
     flash("You have been logged out", "success")
     return redirect("/")
+
 
 
 #===========================================================

@@ -23,7 +23,7 @@ def login_required(func):
 
         # No, so go to home page
         flash("You need to be logged in", "error")
-        return redirect("/")
+        return redirect("/login")
 
     return wrapper
 

@@ -52,13 +52,16 @@ class MemberTable:
     NAME = "members"
 
     SCHEMA = """
-        CREATE TABLE members (
-            team_id   INTEGER PRIMARY KEY,
-            member_id INTEGER NOT NULL,
+    CREATE TABLE members (
+        id             INTEGER PRIMARY KEY AUTOINCREMENT,
+        tournament_id  INTEGER NOT NULL,
+        member_id      INTEGER NOT NULL,
+        team           TEXT,
 
-            FOREIGN KEY(member_id) REFERENCES players(id)
-        )
-    """
+        FOREIGN KEY(tournament_id) REFERENCES tournaments(id),
+        FOREIGN KEY(member_id)     REFERENCES players(id)
+    )
+"""
 
     SEED_DATA = """
         INSERT INTO members (team_id, member_id)
@@ -73,33 +76,29 @@ class TournamentTable:
     NAME = "tournaments"
 
     SCHEMA = """
-        CREATE TABLE tournaments (
-            id          INTEGER PRIMARY KEY AUTOINCREMENT,
-            semester_id INTEGER NOT NULL,
-            phase_id    INTEGER NOT NULL,
-            team1_id    INTEGER NOT NULL,
-            team2_id    INTEGER NOT NULL,
-            win_id      INTEGER NOT NULL,
-
-            FOREIGN KEY(team1_id) REFERENCES members(team_id),
-            FOREIGN KEY(team2_id) REFERENCES members(team_id),
-            FOREIGN KEY(win_id)   REFERENCES members(team_id)
-        )
-    """
+    CREATE TABLE tournaments (
+        id           INTEGER PRIMARY KEY AUTOINCREMENT,
+        semester_id  INTEGER NOT NULL,
+        phase_id     INTEGER NOT NULL,
+        date         TEXT,
+        team_a_score INTEGER,
+        team_b_score INTEGER,
+        winning_team TEXT
+    )
+"""
 
     SEED_DATA = """
-        INSERT INTO tournaments (semester_id, phase_id, team1_id, team2_id, win_id)
+        INSERT INTO tournaments (semester_id, phase_id, date)
         VALUES
-            (1, 1, 1, 2, 1),
-            (1, 2, 1, 2, 1),
-
+            (1, 7, "Wed 6 August")
     """
 
 
 TABLES = [
+    UserTable,
     PlayerTable,
-    MemberTable,
     TournamentTable,
+    MemberTable
 ]
 
 #============================================================================

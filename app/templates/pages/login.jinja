@@ -1,5 +1,7 @@
 {#=====================================================
   Sign In page
+  - Only Rami signs in, so point everyone else to
+    the public standings
 =====================================================#}
 
 {% extends 'pages/_base.jinja' %}
@@ -23,5 +25,8 @@
 
         <button>Sign in</button>
     </form>
+
+    <p>Here to check the standings? No need to sign in.</p>
+    <a href="/tournament/standings" role="button">View Current Standings</a>
 
 {% endblock %}

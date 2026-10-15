@@ -1,0 +1,26 @@
+{#=====================================================
+  Current Standings page
+  - This semester's points, highest first (public)
+=====================================================#}
+
+{% extends 'pages/_base.jinja' %}
+
+
+{% block title %}
+    - Standings
+{% endblock %}
+
+
+{% block content %}
+
+    <h2>Semester {{ semester }} Standings</h2>
+
+    {% for player in standings %}
+        <p>{{ loop.index }}. {{ player.name }} - {{ player.total }} points</p>
+    {% else %}
+        <p>No points yet</p>
+    {% endfor %}
+
+    <a href="/tournament" role="button">Back</a>
+
+{% endblock %}

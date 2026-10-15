@@ -1,0 +1,18 @@
+{#=====================================================
+  Tournament base template
+  - Extends _base.jinja and adds the shared tournament
+    header. All tournament pages extend this.
+=====================================================#}
+
+{% extends 'pages/_base.jinja' %}
+
+
+{% block content %}
+
+    <h2>{% block heading %}{% endblock %}</h2>
+    <p>Semester {{ tt_semester }}, Phase {{ tt_phase }}</p>
+
+    {% block tournament_content %}
+    {% endblock %}
+
+{% endblock %}

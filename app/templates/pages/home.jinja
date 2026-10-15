@@ -1,5 +1,6 @@
 {#=====================================================
   Home page
+  - A card for each part of the club site (public)
 =====================================================#}
 
 {% extends 'pages/_base.jinja' %}
@@ -9,11 +10,15 @@
 
     <h2>Nelson Chess Club</h2>
 
-    <div class="tournament">
-        <h3>Teams Tournament</h3>
-        <p>{{ tt_day }} | {{ tt_location }}</p>
-        <p>Semester {{ tt_semester }}, Phase {{ tt_phase }}</p>
-        <a href="/tournament">View Teams Tournament</a>
-    </div>
+    <section id="cards">
+
+        <div class="card">
+            <h3>Teams Tournament</h3>
+            <p>{{ tt_day }} | {{ tt_location }}</p>
+            <p>Semester {{ tt_semester }}, Phase {{ tt_phase }}</p>
+            <a href="/tournament">View Teams Tournament</a>
+        </div>
+
+    </section>
 
 {% endblock %}

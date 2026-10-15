@@ -1,0 +1,54 @@
+{#=====================================================
+  TT Result page
+  - Rami enters both team scores, or sees the saved
+    result if it's already been entered
+=====================================================#}
+
+{% extends 'pages/tournament_base.jinja' %}
+
+
+{% block title %}
+    - TT Result
+{% endblock %}
+
+
+{% block heading %}TT Result{% endblock %}
+
+
+{% block tournament_content %}
+
+    {% if tournament.winning_team %}
+
+        {# Already saved - show the result instead of the form #}
+        <p>Team A {{ tournament.team_a_score }} - {{ tournament.team_b_score }} Team B</p>
+
+        {% if tournament.winning_team == "Draw" %}
+            <p>Draw - no points given</p>
+        {% else %}
+            <p>Team {{ tournament.winning_team }} wins</p>
+        {% endif %}
+
+        <a href="/tournament" role="button">Back to Teams Tournament</a>
+
+    {% else %}
+
+        {# forms.md #}
+        <form method="post" action="/tournament/{{ tournament_id }}/result">
+            <label>
+                Team A Score
+                <input name="team_a_score" type="number" min="0" required>
+            </label>
+
+            <label>
+                Team B Score
+                <input name="team_b_score" type="number" min="0" required>
+            </label>
+
+            <button>Confirm Scores</button>
+        </form>
+
+        <a href="/tournament/{{ tournament_id }}/teams" role="button">Back</a>
+
+    {% endif %}
+
+{% endblock %}

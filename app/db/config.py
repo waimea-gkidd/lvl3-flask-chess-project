@@ -1,5 +1,5 @@
 #============================================================================
-# Teams Tournament Database Tables
+# Teams Tournament + Normal Meetings Database Tables
 #============================================================================
 # app/db/config.py
 
@@ -18,7 +18,7 @@ class UserTable:
     """
 
     # This is a TEST account so login works out of the box:
-    # username: rami   password: test
+    # username: flumph42   password: test
     # (this is the exact example hash from docs/guides/schema.md)
     SEED_DATA = """
         INSERT INTO users (forename, surname, username, pass_hash)
@@ -26,10 +26,13 @@ class UserTable:
             ("Flumph", "Testington", "flumph42", "scrypt:32768:8:1$n7eJTucLbaGmUpAM$c1776374a8d456a6eaf61bccc08db5e1fcc4ff3b3983d364c45ab13074255eeae0a393afb11f99a9fe63fb1d980992ace17a72ba70324523b11e92e36cbe4252")
     """
     ## schema.md stated that the given hash password = "test"
+
+
 class PlayerTable:
 
     NAME = "players"
 
+    # Every Nelson Chess Club member - used by both TTs and normal meetings
     SCHEMA = """
         CREATE TABLE players (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,37 +40,19 @@ class PlayerTable:
         )
     """
 
+    # Test data so there's a list to search/toggle against -
+    # swap these for Rami's real club roster later
     SEED_DATA = """
         INSERT INTO players (name)
         VALUES
             ("Alice"),
             ("Bob"),
             ("Charlie"),
-            ("Dana")
-    """
-
-
-class MemberTable:
-
-    NAME = "members"
-
-    SCHEMA = """
-    CREATE TABLE members (
-        id             INTEGER PRIMARY KEY AUTOINCREMENT,
-        tournament_id  INTEGER NOT NULL,
-        member_id      INTEGER NOT NULL,
-        team           TEXT,
-
-        FOREIGN KEY(tournament_id) REFERENCES tournaments(id),
-        FOREIGN KEY(member_id)     REFERENCES players(id)
-    )
-"""
-
-    SEED_DATA = """
-        INSERT INTO members (team_id, member_id)
-        VALUES
-            (1, 1),
-            (2, 2)
+            ("Dana"),
+            ("Ethan"),
+            ("Fiona"),
+            ("George"),
+            ("Holly")
     """
 
 
@@ -75,37 +60,91 @@ class TournamentTable:
 
     NAME = "tournaments"
 
+    # One row per club night:
+    #   type 'TT' = Teams Tournament (has semester, phase and scores)
+    #   type 'NM' = Normal Meeting   (just a date)
     SCHEMA = """
-    CREATE TABLE tournaments (
-        id           INTEGER PRIMARY KEY AUTOINCREMENT,
-        semester_id  INTEGER NOT NULL,
-        phase_id     INTEGER NOT NULL,
-        date         TEXT,
-        team_a_score INTEGER,
-        team_b_score INTEGER,
-        winning_team TEXT
-    )
-"""
+        CREATE TABLE tournaments (
+            id           INTEGER PRIMARY KEY AUTOINCREMENT,
+            type         TEXT NOT NULL DEFAULT 'TT',
+            semester_id  INTEGER,
+            phase_id     INTEGER,
+            date         TEXT,
+            team_a_score INTEGER,
+            team_b_score INTEGER,
+            winning_team TEXT
+        )
+    """
 
     SEED_DATA = """
-        INSERT INTO tournaments (semester_id, phase_id, date)
+        INSERT INTO tournaments (type, semester_id, phase_id, date)
         VALUES
-            (1, 7, "Wed 6 August")
+            ("TT", 1, 7, "Wed 6 August")
     """
 
 
-TABLES = [
-    UserTable,
-    PlayerTable,
-    TournamentTable,
-    MemberTable
-]
+class MemberTable:
 
-#============================================================================
-# Casual meetings database tables
-#============================================================================
+    NAME = "members"
+
+    # Who came to which night. team is only used for TTs (stays empty
+    # for normal meetings). payment: "Paid", "Not Paid" or "Invoiced"
+    SCHEMA = """
+        CREATE TABLE members (
+            id             INTEGER PRIMARY KEY AUTOINCREMENT,
+            tournament_id  INTEGER NOT NULL,
+            member_id      INTEGER NOT NULL,
+            team           TEXT,
+            payment        TEXT NOT NULL DEFAULT 'Not Paid',
+
+            FOREIGN KEY(tournament_id) REFERENCES tournaments(id),
+            FOREIGN KEY(member_id)     REFERENCES players(id)
+        )
+    """
+
+    SEED_DATA = """
+        INSERT INTO members (tournament_id, member_id, team)
+        VALUES
+            (1, 1, "A"),
+            (1, 2, "B")
+    """
+
+
+class PointTable:
+
+    NAME = "points"
+
+    # One row per player per phase - semester and phase stored
+    # straight on the row so lookups stay single-table (TTs only)
+    SCHEMA = """
+        CREATE TABLE points (
+            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            player_id   INTEGER NOT NULL,
+            semester_id INTEGER NOT NULL,
+            phase_id    INTEGER NOT NULL,
+            points      INTEGER NOT NULL DEFAULT 0,
+
+            FOREIGN KEY(player_id) REFERENCES players(id)
+        )
+    """
+
+    SEED_DATA = None
 
 
 #============================================================================
 # Classes database tables
 #============================================================================
+
+
+#============================================================================
+# Table registry - created in this order (linked tables after the ones
+# they point to)
+#============================================================================
+
+TABLES = [
+    UserTable,
+    PlayerTable,
+    TournamentTable,
+    MemberTable,
+    PointTable,
+]

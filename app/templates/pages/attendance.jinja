@@ -1,0 +1,63 @@
+{#=====================================================
+  TT Attendance page
+  - Search, club member list with attendance toggles,
+    add player, and on to Setup Teams
+=====================================================#}
+
+{% extends 'pages/tournament_base.jinja' %}
+
+
+{% block title %}
+    TT Attendance
+{% endblock %}
+
+
+{% block heading %}TT Attendance{% endblock %}
+
+
+{% block tournament_content %}
+
+    {# routes.md #}
+    <form method="get" action="/tournament/{{ tournament_id }}/attendance">
+        <label>
+            Search Player
+            <input name="q" type="text" value="{{ search }}">
+        </label>
+        <button>Search</button>
+    </form>
+
+    <section id="members">
+        <h3>Members</h3>
+
+        {# One form per player - the form is the player's box #}
+        {% for player in players %}
+            <form method="post" action="/tournament/{{ tournament_id }}/attendance/toggle">
+                <input type="hidden" name="player_id" value="{{ player.id }}">
+                <input type="hidden" name="search" value="{{ search }}">
+
+                <span>{{ player.name }}</span>
+
+                {% if player.id in attending_ids %}
+                    <button>Attending</button>
+                {% else %}
+                    <button>Not attending</button>
+                {% endif %}
+            </form>
+        {% else %}
+            <p>No players found</p>
+        {% endfor %}
+    </section>
+
+    <form method="post" action="/tournament/{{ tournament_id }}/player">
+        <label>
+            New Player Name
+            <input name="name" type="text" required>
+        </label>
+        <button>Add Player</button>
+    </form>
+
+    <form method="post" action="/tournament/{{ tournament_id }}/attendance/done">
+        <button>Setup Teams</button>
+    </form>
+
+{% endblock %}

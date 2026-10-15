@@ -1,0 +1,43 @@
+{#=====================================================
+  TT Teams page
+  - Attending players with a toggle for Team A / Team B
+=====================================================#}
+
+{% extends 'pages/tournament_base.jinja' %}
+
+
+{% block title %}
+    - TT Teams
+{% endblock %}
+
+
+{% block heading %}TT Teams{% endblock %}
+
+
+{% block tournament_content %}
+
+    <section id="members">
+        <h3>Players</h3>
+
+        {# One form per player - the form is the player's box #}
+        {% for member in members %}
+            <form method="post" action="/tournament/{{ tournament_id }}/team/toggle">
+                <input type="hidden" name="row_id" value="{{ member.id }}">
+
+                <span>{{ member.name }}</span>
+
+                {% if member.team == "A" %}
+                    <button>Team A</button>
+                {% else %}
+                    <button>Team B</button>
+                {% endif %}
+            </form>
+        {% else %}
+            <p>No one is attending yet</p>
+        {% endfor %}
+    </section>
+
+    <a href="/tournament/{{ tournament_id }}/result" role="button">Confirm Teams</a>
+    <a href="/tournament/{{ tournament_id }}/attendance" role="button">Back</a>
+
+{% endblock %}

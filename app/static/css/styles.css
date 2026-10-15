@@ -12,8 +12,6 @@
     --border-col:       #355;
 
     --accent-col:       #e43;
-
-    --tt-col:           #4B7DA7;
 }
 
 
@@ -68,23 +66,6 @@ main > h2 {
 }
 
 
-/* Teams Tournament --------------------------------------------------*/
-
-.tournament {
-    max-width: 20rem;
-    margin-inline: auto;
-    padding: 1rem;
-
-    color: #fff;
-    background-color: var(--tt-col);
-    border-radius: 0.5rem;
-
-    a {
-        color: #fff;
-    }
-}
-
-
 /* Forms --------------------------------------------------*/
 
 form {
@@ -97,4 +78,73 @@ form {
     padding: 1rem;
 
     border: 2px solid var(--border-col);
+}
+
+
+/* Club Members list --------------------------------------------*/
+
+#members {
+    max-width: 30rem;
+    margin-inline: auto;
+
+    max-height: 25rem;
+    overflow-y: auto;
+
+    form {
+        flex-direction: row;
+        align-items: center;
+
+        span {
+            flex: 1;
+        }
+    }
+}
+
+
+/* Cards (home page + tournament home) --------------------------*/
+
+#cards {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+
+    @media (width >= 500px) {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    @media (width >= 800px) {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .card {
+        padding: 1rem;
+
+        background-color: var(--back-col-panel);
+        border: 2px solid var(--border-col);
+        border-radius: 0.5rem;
+    }
+}
+
+
+/* Header & Nav -----------------------------------------------*/
+
+body > header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+
+    .logo {
+        height: 3rem;
+    }
+
+    nav {
+        display: flex;
+        gap: 1rem;
+
+        a {
+            color: var(--accent-col);
+        }
+    }
 }

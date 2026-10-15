@@ -1,0 +1,60 @@
+{#=====================================================
+  Teams Tournament home
+  - Everyone: current standings link, a card for every
+    session (newest first)
+  - Rami only: start a new session
+=====================================================#}
+
+{% extends 'pages/_base.jinja' %}
+
+
+{% block title %}
+    - Teams Tournament
+{% endblock %}
+
+
+{% block content %}
+
+    <h2>Teams Tournament</h2>
+
+    <a href="/tournament/standings" role="button">Current Standings</a>
+
+    {% if session.logged_in %}
+        <form method="post" action="/tournament/new">
+            <button>Start New Session</button>
+        </form>
+    {% endif %}
+
+    <section id="cards">
+
+        {% for tournament in tournaments %}
+
+            <div class="card">
+                <h3>Semester {{ tournament.semester_id }}, Phase {{ tournament.phase_id }}</h3>
+
+                {% if tournament.date %}
+                    <p>{{ tournament.date }}</p>
+                {% endif %}
+
+                {% if tournament.winning_team %}
+                    <p>Team A {{ tournament.team_a_score }} - {{ tournament.team_b_score }} Team B</p>
+
+                    {% if tournament.winning_team == "Draw" %}
+                        <p>Draw</p>
+                    {% else %}
+                        <p>Team {{ tournament.winning_team }} won</p>
+                    {% endif %}
+                {% else %}
+                    <p>No result yet</p>
+                {% endif %}
+            </div>
+
+        {% else %}
+
+            <p>No sessions yet</p>
+
+        {% endfor %}
+
+    </section>
+
+{% endblock %}

@@ -3,6 +3,7 @@
   By Gideon Kidd
 ===========================================================*/
 
+/* Colours */
 :root {
     --text-col:         #111;
 
@@ -26,35 +27,18 @@ html {
 
 
 body {
-    min-height: 100dvh;
+    min-height: 100dvh;  /* Page always height of screen  */
+
 }
 
 
 main {
     max-width: 60rem;
-    margin-inline: auto;
+    margin-inline: auto; /* Center content */
+
     padding: 1rem;
 }
 
-
-/* Header & Nav -----------------------------------------------*/
-
-body > header {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem;
-
-    nav {
-        display: flex;
-        gap: 1rem;
-
-        a {
-            color: var(--accent-col);
-        }
-    }
-}
 
 
 /* Page Headings -----------------------------------------------*/
@@ -67,14 +51,17 @@ main > h2 {
 
 
 /* Forms --------------------------------------------------*/
+/* creatures project */
 
 form {
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Stacks buttons ontop of one another */
+
     gap: 1rem;
 
     max-width: 20rem;
-    margin-inline: auto;
+    margin-inline: auto; /* center content */
+
     padding: 1rem;
 
     border: 2px solid var(--border-col);
@@ -82,10 +69,13 @@ form {
 
 
 /* Club Members list --------------------------------------------*/
+/* attendance and teams page */
 
 #members {
     max-width: 30rem;
     margin-inline: auto;
+
+    /* from style sheet. creates a scrollable container instead of letting contect run off the page */
 
     max-height: 25rem;
     overflow-y: auto;

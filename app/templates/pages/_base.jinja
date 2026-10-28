@@ -25,15 +25,18 @@
 <body>
 
     <header>
-        <a href="/">
+        <a href="/"> 
+       {#CIN logo is linked to the base template so it appears on every page.#}
+
             <img src="/static/images/CIN_logo.png" alt="Chess in Nelson" class="logo">
         </a>
-
-        <nav>
+            {#Nav = Auth.md login requirements for certain pages.#}
+                <nav>
             {% if session.logged_in %}
                 Welcome, {{ session.user.forename }}!
                 <a href="/">Home</a>
                 <a href="/tournament">Teams Tournament</a>
+                <a href="/meeting">Normal Meetings</a>
                 <a href="/logout">Logout</a>
             {% else %}
                 <a href="/">Home</a>
@@ -43,10 +46,11 @@
         </nav>
     </header>
 
-    {# Show flash messages from any previous events #}
+    {# Show flash messages from any previous sessions. Not used so well so far #}
     {% include "partials/messages.jinja" %}
 
     <main>
+            {#this is where the content of each page will be going#}
 
         {% block content %}
         {% endblock %}

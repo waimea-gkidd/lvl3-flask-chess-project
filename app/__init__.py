@@ -5,27 +5,25 @@
 
 from flask import Flask, request, session, render_template, flash, redirect
 from werkzeug.security import check_password_hash
+# from werkzeug.security import generate_password_hash
+# ^ needed later to make the hash for Rami's real password (auth.md)
 from dotenv import load_dotenv
 import html
 from app.helpers import *
 
-
-# Create the app
 app = Flask(__name__)
-
-
 #===========================================================
 # App Routes Handlers
 #===========================================================
 
 #-----------------------------------------------------------
-# Home page - Teams Tournament info (public)
+# Home page: Teams Tournament info (public)
 #-----------------------------------------------------------
 @app.get("/")
 def show_home():
     with connect_db() as db:
-        # sqlite.md - latest session
-        sql = "SELECT semester_id, phase_id FROM tournaments ORDER BY id DESC LIMIT 1"
+        # sqlite.md latest TT session
+        sql = "SELECT semester_id, phase_id FROM tournaments WHERE type='TT' ORDER BY id DESC"
         params = ()
         tournament = db.execute(sql, params).fetchone()
 
@@ -45,17 +43,22 @@ def show_home():
     )
 
 
+#===========================================================
+# Teams Tournament
+#===========================================================
+
 #-----------------------------------------------------------
-# Teams Tournament home - every session (public),
+# Teams Tournament home: every session (public),
 # start sessions (Rami only - see template)
 #-----------------------------------------------------------
 @app.get("/tournament")
 def show_tournament_home():
     with connect_db() as db:
-        # crud.md - newest first
+        # crud.md newest first, used for TT nights only
         sql = """
             SELECT id, semester_id, phase_id, date, team_a_score, team_b_score, winning_team
             FROM tournaments
+            WHERE type='TT'
             ORDER BY id DESC
         """
         params = ()
@@ -65,13 +68,13 @@ def show_tournament_home():
 
 
 #-----------------------------------------------------------
-# Current standings - this semester's points (public)
+# Current standings: this semester's points (public)
 #-----------------------------------------------------------
 @app.get("/tournament/standings")
 def show_standings():
     with connect_db() as db:
-        # sqlite.md - the current semester is the latest session's semester
-        sql = "SELECT semester_id FROM tournaments ORDER BY id DESC LIMIT 1"
+        # sqlite.md - the current semester is the latest TT session's semester
+        sql = "SELECT semester_id FROM tournaments WHERE type='TT' ORDER BY id DESC"
         params = ()
         latest = db.execute(sql, params).fetchone()
 
@@ -80,27 +83,64 @@ def show_standings():
         else:
             semester = None
 
-        # Add up each player's phase points for this semester, highest first
+        # Ancestry Tracker - JOIN gets each players name with their points, highest first
+        # messages project - AS renames points to total
         sql = """
-            SELECT player_id, SUM(points) AS total
+            SELECT players.name, points.points AS total
             FROM points
-            WHERE semester_id=?
-            GROUP BY player_id
-            ORDER BY total DESC
+            JOIN players ON points.player_id = players.id
+            WHERE points.semester_id=?
+            ORDER BY points.points DESC
         """
         params = (semester,)
-        totals = db.execute(sql, params).fetchall()
-
-        # Look up each player's name one at a time (no JOINs)
-        standings = []
-        for row in totals:
-            sql = "SELECT name FROM players WHERE id=?"
-            params = (row["player_id"],)
-            player = db.execute(sql, params).fetchone()
-
-            standings.append({"name": player["name"], "total": row["total"]})
+        standings = db.execute(sql, params).fetchall()
 
     return render_template("pages/standings.jinja", semester=semester, standings=standings)
+
+
+#-----------------------------------------------------------
+# View one session: result and who was there (public)
+#-----------------------------------------------------------
+@app.get("/tournament/<int:id>")
+def show_session(id):
+    with connect_db() as db:
+        # sqlite.md
+        sql = """
+            SELECT semester_id, phase_id, date, team_a_score, team_b_score, winning_team
+            FROM tournaments
+            WHERE id=?
+        """
+        params = (id,)
+        tournament = db.execute(sql, params).fetchone()
+
+        # Ancestry Tracker - JOIN gets the names of everyone on team A
+        sql = """
+            SELECT players.name
+            FROM members
+            JOIN players ON members.member_id = players.id
+            WHERE members.tournament_id=? AND members.team='A'
+        """
+        params = (id,)
+        team_a = db.execute(sql, params).fetchall()
+
+        # same again for team B
+        sql = """
+            SELECT players.name
+            FROM members
+            JOIN players ON members.member_id = players.id
+            WHERE members.tournament_id=? AND members.team='B'
+        """
+        params = (id,)
+        team_b = db.execute(sql, params).fetchall()
+
+    return render_template(
+        "pages/session.jinja",
+        tt_semester=tournament["semester_id"],
+        tt_phase=tournament["phase_id"],
+        tournament=tournament,
+        team_a=team_a,
+        team_b=team_b,
+    )
 
 
 #-----------------------------------------------------------
@@ -110,8 +150,8 @@ def show_standings():
 @login_required
 def start_tournament():
     with connect_db() as db:
-        # sqlite.md - carry the last session's semester/phase forward
-        sql = "SELECT semester_id, phase_id FROM tournaments ORDER BY id DESC LIMIT 1"
+        # sqlite.md - carry the last TT session's semester/phase forward
+        sql = "SELECT semester_id, phase_id FROM tournaments WHERE type='TT' ORDER BY id DESC"
         params = ()
         last = db.execute(sql, params).fetchone()
 
@@ -122,18 +162,18 @@ def start_tournament():
             semester_id = 1
             phase_id = 1
 
-        # sqlite.md - add the session and get its new id back
+        # sqlite.md add the session and get its new id back
         sql = "INSERT INTO tournaments (semester_id, phase_id) VALUES (?, ?)"
         params = (semester_id, phase_id)
         result = db.execute(sql, params)
-        new_id = result.lastrowid
+        new_id = result.last_row_id
 
     flash("New session started", "success")
     return redirect(f"/tournament/{new_id}/attendance")
 
 
 #-----------------------------------------------------------
-# TT Attendance - player list, search, attendance toggles
+# TT Attendance: player list, search, attendance toggles
 #-----------------------------------------------------------
 @app.get("/tournament/<int:id>/attendance")
 @login_required
@@ -142,7 +182,7 @@ def show_attendance(id):
     search = request.args.get('q', '').strip()
 
     with connect_db() as db:
-        # sqlite.md - this session's semester/phase for the header
+        # sqlite.md this session's semester/phase for the header
         sql = "SELECT semester_id, phase_id FROM tournaments WHERE id=?"
         params = (id,)
         tournament = db.execute(sql, params).fetchone()
@@ -161,9 +201,8 @@ def show_attendance(id):
         params = (id,)
         attending_rows = db.execute(sql, params).fetchall()
 
-    attending_ids = []
-    for row in attending_rows:
-        attending_ids.append(row["member_id"])
+    # creatures project player ids from rows
+    attending_ids = [row["member_id"] for row in attending_rows]
 
     return render_template(
         "pages/attendance.jinja",
@@ -179,31 +218,25 @@ def show_attendance(id):
 #-----------------------------------------------------------
 # Toggle one player's attendance on/off
 #-----------------------------------------------------------
-@app.post("/tournament/<int:id>/attendance/toggle")
+@app.post("/tournament/<int:id>/attendance/<int:player_id>")
 @login_required
-def toggle_attendance(id):
-    # forms.md
-    player_id = request.form.get('player_id', '').strip()
-    search = request.form.get('search', '').strip()
-
+def toggle_attendance(id, player_id):
+    # routes.md - player id comes from the url, no hidden input needed
     with connect_db() as db:
         sql = "SELECT id FROM members WHERE tournament_id=? AND member_id=?"
         params = (id, player_id)
         existing = db.execute(sql, params).fetchone()
 
         if existing:
-            # Already attending - remove them
+            # attending? = revoke their attendance privileges!
             sql = "DELETE FROM members WHERE id=?"
             params = (existing["id"],)
         else:
-            # Not attending - add them, starting on Team A
+            # no attend? = add them to the session (default team = A bc default is needed)
             sql = "INSERT INTO members (tournament_id, member_id, team) VALUES (?, ?, 'A')"
             params = (id, player_id)
         db.execute(sql, params)
 
-    # routes.md - keep the search term if there was one
-    if search:
-        return redirect(f"/tournament/{id}/attendance?q={search}")
     return redirect(f"/tournament/{id}/attendance")
 
 
@@ -233,39 +266,27 @@ def add_player(id):
 
 
 #-----------------------------------------------------------
-# Done picking players - on to Setup Teams
-#-----------------------------------------------------------
-@app.post("/tournament/<int:id>/attendance/done")
-@login_required
-def finish_attendance(id):
-    return redirect(f"/tournament/{id}/teams")
-
-
-#-----------------------------------------------------------
-# TT Teams - attending players with team toggles
+# TT Teams: attending players with team toggles
 #-----------------------------------------------------------
 @app.get("/tournament/<int:id>/teams")
 @login_required
 def show_teams(id):
     with connect_db() as db:
-        # sqlite.md - this session's semester/phase for the header
+        # sqlite.md this session's semester/phase for header
         sql = "SELECT semester_id, phase_id FROM tournaments WHERE id=?"
         params = (id,)
         tournament = db.execute(sql, params).fetchone()
 
-        # Everyone attending this session
-        sql = "SELECT id, member_id, team FROM members WHERE tournament_id=?"
+        # JOIN gets everyone attending with their names
+        # id is the members row, team toggle uses it
+        sql = """
+            SELECT members.id, members.team, players.name
+            FROM members
+            JOIN players ON members.member_id = players.id
+            WHERE members.tournament_id=?
+        """
         params = (id,)
-        member_rows = db.execute(sql, params).fetchall()
-
-        # Look up each player's name one at a time (no JOINs)
-        members = []
-        for row in member_rows:
-            sql = "SELECT name FROM players WHERE id=?"
-            params = (row["member_id"],)
-            player = db.execute(sql, params).fetchone()
-
-            members.append({"id": row["id"], "name": player["name"], "team": row["team"]})
+        members = db.execute(sql, params).fetchall()
 
     return render_template(
         "pages/teams.jinja",
@@ -277,14 +298,12 @@ def show_teams(id):
 
 
 #-----------------------------------------------------------
-# TT Teams - flip one player between Team A and Team B
+# TT Teams: flip one player between Team A and Team B
 #-----------------------------------------------------------
-@app.post("/tournament/<int:id>/team/toggle")
+@app.post("/tournament/<int:id>/team/<int:row_id>")
 @login_required
-def toggle_team(id):
-    # forms.md - row_id is the members row, not the player id
-    row_id = request.form.get('row_id', '').strip()
-
+def toggle_team(id, row_id):
+    # routes.md - row_id comes from the url. its the members row, not the player id
     with connect_db() as db:
         sql = "SELECT team FROM members WHERE id=?"
         params = (row_id,)
@@ -304,7 +323,7 @@ def toggle_team(id):
 
 
 #-----------------------------------------------------------
-# TT Result - score entry form, or the saved result
+# TT Result: score entry form, or the saved result
 #-----------------------------------------------------------
 @app.get("/tournament/<int:id>/result")
 @login_required
@@ -329,7 +348,7 @@ def show_result(id):
 
 
 #-----------------------------------------------------------
-# TT Result - save scores, +1 point to each winner, then
+# TT Result: save scores, +1 point to each winner, then
 # back to the Teams Tournament home
 #-----------------------------------------------------------
 @app.post("/tournament/<int:id>/result")
@@ -346,7 +365,7 @@ def save_result(id):
     team_a_score = int(team_a_score)
     team_b_score = int(team_b_score)
 
-    # Higher score wins - same score is a draw
+    # Higher score wins same score is a draw
     if team_a_score > team_b_score:
         winning_team = "A"
     elif team_b_score > team_a_score:
@@ -359,7 +378,8 @@ def save_result(id):
         params = (id,)
         tournament = db.execute(sql, params).fetchone()
 
-        # Only save once, so points never need undoing
+        # Only save once, so ghat points never need undoing 
+        # (unless rather incomprehensibly the admin wants to delete the whole session and start session again)
         if tournament["winning_team"]:
             flash("Result already saved", "error")
             return redirect(f"/tournament/{id}/result")
@@ -375,24 +395,194 @@ def save_result(id):
         winners = db.execute(sql, params).fetchall()
 
         for winner in winners:
-            # Does this player already have a points row for this phase?
-            sql = "SELECT id, points FROM points WHERE player_id=? AND semester_id=? AND phase_id=?"
-            params = (winner["member_id"], tournament["semester_id"], tournament["phase_id"])
+            # Does player have points row this semester?
+            sql = "SELECT id, points FROM points WHERE player_id=? AND semester_id=?"
+            params = (winner["member_id"], tournament["semester_id"])
             existing = db.execute(sql, params).fetchone()
 
             if existing:
-                # Yes - add 1 to it
+                # Yes add 1
                 sql = "UPDATE points SET points=? WHERE id=?"
                 params = (existing["points"] + 1, existing["id"])
             else:
-                # No - start them on 1
-                sql = "INSERT INTO points (player_id, semester_id, phase_id, points) VALUES (?, ?, ?, 1)"
-                params = (winner["member_id"], tournament["semester_id"], tournament["phase_id"])
+                # No default to 1
+                sql = "INSERT INTO points (player_id, semester_id, points) VALUES (?, ?, 1)"
+                params = (winner["member_id"], tournament["semester_id"])
             db.execute(sql, params)
 
     flash("Result saved", "success")
     return redirect("/tournament")
 
+
+#===========================================================
+# Normal Meetings (Rami only): same table as TTs, type 'NM'
+#===========================================================
+
+#-----------------------------------------------------------
+# Normal Meetings home: every (past) meeting, start a new one
+#-----------------------------------------------------------
+@app.get("/meeting")
+@login_required
+def show_meeting_home():
+    with connect_db() as db:
+        # crud.md newest first, NM nights only
+        sql = "SELECT id, date FROM tournaments WHERE type='NM' ORDER BY id DESC"
+        params = ()
+        meetings = db.execute(sql, params).fetchall()
+
+    return render_template("pages/normal_meeting.jinja", meetings=meetings)
+
+
+#-----------------------------------------------------------
+# View one meeting: attendees
+#-----------------------------------------------------------
+@app.get("/meeting/<int:id>")
+@login_required
+def show_meeting(id):
+    with connect_db() as db:
+        # sqlite.md
+        sql = "SELECT date FROM tournaments WHERE id=?"
+        params = (id,)
+        meeting = db.execute(sql, params).fetchone()
+
+        # Ancestry Tracker - JOIN gets the names of everyone who came
+        sql = """
+            SELECT players.name
+            FROM members
+            JOIN players ON members.member_id = players.id
+            WHERE members.tournament_id=?
+        """
+        params = (id,)
+        attended = db.execute(sql, params).fetchall()
+
+    return render_template(
+        "pages/meeting.jinja",
+        meeting_date=meeting["date"],
+        attended=attended,
+    )
+
+
+#-----------------------------------------------------------
+# Start a new meeting
+#-----------------------------------------------------------
+@app.post("/meeting/new")
+@login_required
+def start_meeting():
+    # forms.md
+    date = request.form.get('date', '').strip()
+
+    if not date:
+        flash("Meeting date is required", "error")
+        return redirect("/meeting")
+
+    date = html.escape(date)
+
+    with connect_db() as db:
+        # sqlite.md add meeting get new id
+        sql = "INSERT INTO tournaments (type, date) VALUES ('NM', ?)"
+        params = (date,)
+        result = db.execute(sql, params)
+        new_id = result.lastrowid
+
+    flash("New meeting started", "success")
+    return redirect(f"/meeting/{new_id}/attendance")
+
+
+#-----------------------------------------------------------
+# NM Attendance: player list, search, attendance toggles
+#-----------------------------------------------------------
+@app.get("/meeting/<int:id>/attendance")
+@login_required
+def show_meeting_attendance(id):
+    # routes.md
+    search = request.args.get('q', '').strip()
+
+    with connect_db() as db:
+        # sqlite.md meeting's date for the header
+        sql = "SELECT date FROM tournaments WHERE id=?"
+        params = (id,)
+        meeting = db.execute(sql, params).fetchone()
+
+        if search:
+            # routes.md
+            sql = "SELECT id, name FROM players WHERE name LIKE ?"
+            params = (f"%{search}%",)
+        else:
+            sql = "SELECT id, name FROM players"
+            params = ()
+        players = db.execute(sql, params).fetchall()
+
+        # Who's already attending this meeting
+        sql = "SELECT member_id FROM members WHERE tournament_id=?"
+        params = (id,)
+        attending_rows = db.execute(sql, params).fetchall()
+
+    # creatures project player ids from rows
+    attending_ids = [row["member_id"] for row in attending_rows]
+
+    return render_template(
+        "pages/meeting_attendance.jinja",
+        meeting_id=id,
+        meeting_date=meeting["date"],
+        players=players,
+        attending_ids=attending_ids,
+        search=search,
+    )
+
+
+#-----------------------------------------------------------
+# Toggle one player's meeting attendance on/off
+#-----------------------------------------------------------
+@app.post("/meeting/<int:id>/attendance/<int:player_id>")
+@login_required
+def toggle_meeting_attendance(id, player_id):
+    # routes.md player id from url
+    with connect_db() as db:
+        sql = "SELECT id FROM members WHERE tournament_id=? AND member_id=?"
+        params = (id, player_id)
+        existing = db.execute(sql, params).fetchone()
+
+        if existing:
+            # Attending: remove!
+            sql = "DELETE FROM members WHERE id=?"
+            params = (existing["id"],)
+        else:
+            # No atend?: add they ahh!
+            sql = "INSERT INTO members (tournament_id, member_id) VALUES (?, ?)"
+            params = (id, player_id)
+        db.execute(sql, params)
+
+    return redirect(f"/meeting/{id}/attendance")
+
+
+#-----------------------------------------------------------
+# Add a new player to the club (from a meeting)
+#-----------------------------------------------------------
+@app.post("/meeting/<int:id>/player")
+@login_required
+def add_meeting_player(id):
+    # forms.md
+    name = request.form.get('name', '').strip()
+
+    if not name:
+        flash("Player name is required", "error")
+        return redirect(f"/meeting/{id}/attendance")
+
+    name = html.escape(name)
+
+    # sqlite.md
+    with connect_db() as db:
+        sql = "INSERT INTO players (name) VALUES (?)"
+        params = (name,)
+        db.execute(sql, params)
+
+    flash(f"Player '{name}' added", "success")
+    return redirect(f"/meeting/{id}/attendance")
+
+
+#===========================================================
+# Sign in / out
+#===========================================================
 
 #-----------------------------------------------------------
 # Sign in page

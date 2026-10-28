@@ -14,6 +14,9 @@
 {% block content %}
 
     <h2>Semester {{ semester }} Standings</h2>
+ 
+            {#jinja.md for's and else's cover crashing from no one having points yet. 
+            Otherwise = crash loop#}
 
     {% for player in standings %}
         <p>{{ loop.index }}. {{ player.name }} - {{ player.total }} points</p>

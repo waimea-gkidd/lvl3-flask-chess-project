@@ -1,43 +1,48 @@
 {#=====================================================
-  TT Teams page
-  - Attending players with a toggle for Team A / Team B
+  Normal Meetings home (Rami only)
+  - Start a new meeting, a card for every meeting
+    (newest first), each one opens the meeting
+    copy of tournament_home.jinja
 =====================================================#}
 
-{% extends 'pages/tournament_base.jinja' %}
+{% extends 'pages/_base.jinja' %}
 
 
 {% block title %}
-    - TT Teams
+    - Normal Meetings
 {% endblock %}
 
 
-{% block heading %}TT Teams{% endblock %}
+{% block content %}
 
+    <h2>Normal Meetings</h2>
 
-{% block tournament_content %}
+    {# forms.md type="date" gives a calendar #}
+    <form method="post" action="/meeting/new">
+        <label>
+            Date
+            <input name="date" type="date" required>
+        </label>
+        <button>Start New Meeting</button>
+    </form>
 
-    <section id="members">
-        <h3>Players</h3>
+    <section id="cards">
+{# Creatures project same cards as tournament_home.jinja #}
+        {% for meeting in meetings %}
 
-        {# One form per player - the form is the player's box #}
-        {% for member in members %}
-            <form method="post" action="/tournament/{{ tournament_id }}/team/toggle">
-                <input type="hidden" name="row_id" value="{{ member.id }}">
+            <div class="card">
+            {#jinja.md#}
+                <h3>{{ meeting.date | format_date }}</h3>
+            {#crud.md#}
+                <a href="/meeting/{{ meeting.id }}">View Meeting</a>
+            </div>
 
-                <span>{{ member.name }}</span>
-
-                {% if member.team == "A" %}
-                    <button>Team A</button>
-                {% else %}
-                    <button>Team B</button>
-                {% endif %}
-            </form>
         {% else %}
-            <p>No one is attending yet</p>
-        {% endfor %}
-    </section>
 
-    <a href="/tournament/{{ tournament_id }}/result" role="button">Confirm Teams</a>
-    <a href="/tournament/{{ tournament_id }}/attendance" role="button">Back</a>
+            <p>No meetings yet</p>
+
+        {% endfor %}
+
+    </section>
 
 {% endblock %}

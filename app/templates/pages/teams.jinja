@@ -1,6 +1,7 @@
 {#=====================================================
   TT Teams page
   - Attending players with a toggle for Team A / Team B
+  same setup as attendance toggle
 =====================================================#}
 
 {% extends 'pages/tournament_base.jinja' %}
@@ -10,7 +11,7 @@
     - TT Teams
 {% endblock %}
 
-
+{#Scrollable list from attendace.jinja#}
 {% block heading %}TT Teams{% endblock %}
 
 
@@ -19,13 +20,13 @@
     <section id="members">
         <h3>Players</h3>
 
-        {# One form per player - the form is the player's box #}
+        {# toggle_team #}
+        {# members row id goes in the url (routes.md) #}
         {% for member in members %}
-            <form method="post" action="/tournament/{{ tournament_id }}/team/toggle">
-                <input type="hidden" name="row_id" value="{{ member.id }}">
+            <form method="post" action="/tournament/{{ tournament_id }}/team/{{ member.id }}">
 
                 <span>{{ member.name }}</span>
-
+{#jinja.md buttons show current teams#}
                 {% if member.team == "A" %}
                     <button>Team A</button>
                 {% else %}

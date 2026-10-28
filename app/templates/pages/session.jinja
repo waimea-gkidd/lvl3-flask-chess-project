@@ -1,0 +1,59 @@
+{#=====================================================
+  TT Session page
+  - One session: result and who was on each team
+    (public)
+    — Eventually: add a check box for each players payment status
+=====================================================#}
+
+{% extends 'pages/tournament_base.jinja' %}
+
+
+{% block title %}
+    - TT Session
+{% endblock %}
+
+
+{% block heading %}TT Session{% endblock %}
+
+
+{% block tournament_content %}
+            {#same date a result display from cards on tournament_home.jinja#}
+
+    {% if tournament.date %}
+        <p>{{ tournament.date }}</p>
+    {% endif %}
+
+    {% if tournament.winning_team %}
+        <p>Team A {{ tournament.team_a_score }} - {{ tournament.team_b_score }} Team B</p>
+
+        {% if tournament.winning_team == "Draw" %}
+            <p>Draw</p>
+        {% else %}
+            <p>Team {{ tournament.winning_team }} won</p>
+        {% endif %}
+    {% else %}
+        <p>No result yet</p>
+    {% endif %}
+            {#jinja.md both teams split in show_session#}
+
+    <section>
+        <h3>Team A</h3>
+        {% for player in team_a %}
+            <p>{{ player.name }}</p>
+        {% else %}
+            <p>No players</p>
+        {% endfor %}
+    </section>
+
+    <section>
+        <h3>Team B</h3>
+        {% for player in team_b %}
+            <p>{{ player.name }}</p>
+        {% else %}
+            <p>No players</p>
+        {% endfor %}
+    </section>
+
+    <a href="/tournament" role="button">Back</a>
+
+{% endblock %}

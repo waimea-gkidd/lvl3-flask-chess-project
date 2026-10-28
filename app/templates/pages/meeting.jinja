@@ -1,0 +1,32 @@
+{#=====================================================
+  Normal Meeting page (Rami only)
+  - One meeting: who came
+  - copy of sesion.jinja with one list of atendees 
+    instead of teams 
+=====================================================#}
+
+{% extends 'pages/meeting_base.jinja' %}
+
+
+{% block title %}
+    - Normal Meeting
+{% endblock %}
+
+
+{% block heading %}Normal Meeting{% endblock %}
+
+
+{% block meeting_content %}
+
+    <section>
+        <h3>Attended</h3>
+        {% for player in attended %}
+            <p>{{ player.name }}</p>
+        {% else %}
+            <p>No one attended</p>
+        {% endfor %}
+    </section>
+
+    <a href="/meeting" role="button">Back</a>
+
+{% endblock %}

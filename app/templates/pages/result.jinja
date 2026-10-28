@@ -16,10 +16,9 @@
 
 
 {% block tournament_content %}
-
+{#Jinja.md "check if result exists" saved result shows instead of form so it cant be entered again#}
     {% if tournament.winning_team %}
 
-        {# Already saved - show the result instead of the form #}
         <p>Team A {{ tournament.team_a_score }} - {{ tournament.team_b_score }} Team B</p>
 
         {% if tournament.winning_team == "Draw" %}
@@ -32,16 +31,16 @@
 
     {% else %}
 
-        {# forms.md #}
+        {# forms.md type text, isdigit() in save_result() checks its a number#}
         <form method="post" action="/tournament/{{ tournament_id }}/result">
             <label>
                 Team A Score
-                <input name="team_a_score" type="number" min="0" required>
+                <input name="team_a_score" type="text" required>
             </label>
 
             <label>
                 Team B Score
-                <input name="team_b_score" type="number" min="0" required>
+                <input name="team_b_score" type="text" required>
             </label>
 
             <button>Confirm Scores</button>

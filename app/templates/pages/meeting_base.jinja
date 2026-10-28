@@ -1,0 +1,22 @@
+{#=====================================================
+  Meeting base template
+  - Extends _base.jinja and adds the shared meeting
+    header. All normal meeting pages extend this.
+    meeting date instead of semester x phase y
+  - might seem like a waste to a superior coder,
+=====================================================#}
+
+{% extends 'pages/_base.jinja' %}
+
+
+{% block content %}
+
+    <h2>{% block heading %}{% endblock %}</h2>
+    {#jinja.md instead of text values such as 2026-01-01 
+    would show as a formatted date: January 1, 2026#}
+    <p>{{ meeting_date | format_date }}</p>
+
+    {% block meeting_content %}
+    {% endblock %}
+
+{% endblock %}

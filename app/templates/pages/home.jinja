@@ -1,6 +1,7 @@
 {#=====================================================
   Home page
-  - A card for each part of the club site (public)
+  - A card for each part of the CIN site
+  - Normal Meetings card is Rami only
 =====================================================#}
 
 {% extends 'pages/_base.jinja' %}
@@ -9,15 +10,27 @@
 {% block content %}
 
     <h2>Nelson Chess Club</h2>
+            {#Creatures project cards in styles.css#}
 
     <section id="cards">
 
         <div class="card">
+                    {#see show_home() for dates#}
+
             <h3>Teams Tournament</h3>
             <p>{{ tt_day }} | {{ tt_location }}</p>
             <p>Semester {{ tt_semester }}, Phase {{ tt_phase }}</p>
             <a href="/tournament">View Teams Tournament</a>
         </div>
+            {#admin page for Rami#}
+
+        {% if session.logged_in %}
+            <div class="card">
+                <h3>Normal Meetings</h3>
+                <p>{{ tt_day }} | {{ tt_location }}</p>
+                <a href="/meeting">View Normal Meetings</a>
+            </div>
+        {% endif %}
 
     </section>
 

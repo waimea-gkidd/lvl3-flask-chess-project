@@ -1,8 +1,8 @@
 {#=====================================================
   Teams Tournament home
-  - Everyone: current standings link, a card for every
-    session (newest first)
-  - Rami only: start a new session
+  - Everyone: current standings route, card for every
+    session (newest first), each one opens the session details
+  - Rami only: start a new session, edit (coming soon)
 =====================================================#}
 
 {% extends 'pages/_base.jinja' %}
@@ -19,11 +19,15 @@
 
     <a href="/tournament/standings" role="button">Current Standings</a>
 
+            {#admin actions for begining a session#}
+
     {% if session.logged_in %}
         <form method="post" action="/tournament/new">
             <button>Start New Session</button>
         </form>
     {% endif %}
+
+            {#session cards#}
 
     <section id="cards">
 
@@ -31,10 +35,13 @@
 
             <div class="card">
                 <h3>Semester {{ tournament.semester_id }}, Phase {{ tournament.phase_id }}</h3>
+            
+            {#only show date if it exists#}
 
                 {% if tournament.date %}
                     <p>{{ tournament.date }}</p>
                 {% endif %}
+            {#jinja.ma saved result = shows score + winner#}
 
                 {% if tournament.winning_team %}
                     <p>Team A {{ tournament.team_a_score }} - {{ tournament.team_b_score }} Team B</p>
@@ -47,6 +54,9 @@
                 {% else %}
                     <p>No result yet</p>
                 {% endif %}
+            {#crud.md#}
+
+                <a href="/tournament/{{ tournament.id }}">View Session</a>
             </div>
 
         {% else %}

@@ -5,6 +5,8 @@
 
 class UserTable:
 
+# User table used for login. Only one user is seeded in, but more can be added later. 
+
     NAME = "users"
 
     SCHEMA = """
@@ -17,22 +19,23 @@ class UserTable:
         )
     """
 
-    # This is a TEST account so login works out of the box:
-    # username: flumph42   password: test
-    # (this is the exact example hash from docs/guides/schema.md)
+    # schema.md (test login) states that the given hash password = "test"
+    # username = "flumph42" password = "test"
+
     SEED_DATA = """
         INSERT INTO users (forename, surname, username, pass_hash)
         VALUES
-            ("Flumph", "Testington", "flumph42", "scrypt:32768:8:1$n7eJTucLbaGmUpAM$c1776374a8d456a6eaf61bccc08db5e1fcc4ff3b3983d364c45ab13074255eeae0a393afb11f99a9fe63fb1d980992ace17a72ba70324523b11e92e36cbe4252")
+            ("Testington", "Testington", "testington42", "scrypt:32768:8:1$n7eJTucLbaGmUpAM$c1776374a8d456a6eaf61bccc08db5e1fcc4ff3b3983d364c45ab13074255eeae0a393afb11f99a9fe63fb1d980992ace17a72ba70324523b11e92e36cbe4252")
     """
-    ## schema.md stated that the given hash password = "test"
+    ## schema.md stated that  the given hash password = "test"
 
 
 class PlayerTable:
 
     NAME = "players"
 
-    # Every Nelson Chess Club member - used by both TTs and normal meetings
+    # Every Nelson Chess Club member - 
+    # used by both TTs (Teams Tournaments) and NM's (Normal Meetings)
     SCHEMA = """
         CREATE TABLE players (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,8 +43,9 @@ class PlayerTable:
         )
     """
 
-    # Test data so there's a list to search/toggle against -
-    # swap these for Rami's real club roster later
+    # Test players are for privacy. 
+    # Actual players will be added later. 
+    # The names are just for testing purposes and privacy.
     SEED_DATA = """
         INSERT INTO players (name)
         VALUES
@@ -88,7 +92,8 @@ class MemberTable:
     NAME = "members"
 
     # Who came to which night. team is only used for TTs (stays empty
-    # for normal meetings). payment: "Paid", "Not Paid" or "Invoiced"
+    # for normal meetings). payment: "Paid", "Not Paid" or "Invoiced" to come soon 
+    # links player table to a tournament.
     SCHEMA = """
         CREATE TABLE members (
             id             INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -114,14 +119,14 @@ class PointTable:
 
     NAME = "points"
 
-    # One row per player per phase - semester and phase stored
-    # straight on the row so lookups stay single-table (TTs only)
+    # One row per player per semester - their running total
+    # winners et +1 point (save_result()) 
+    # standings can be calculated from this table.
     SCHEMA = """
         CREATE TABLE points (
             id          INTEGER PRIMARY KEY AUTOINCREMENT,
             player_id   INTEGER NOT NULL,
             semester_id INTEGER NOT NULL,
-            phase_id    INTEGER NOT NULL,
             points      INTEGER NOT NULL DEFAULT 0,
 
             FOREIGN KEY(player_id) REFERENCES players(id)
@@ -134,6 +139,8 @@ class PointTable:
 #============================================================================
 # Classes database tables
 #============================================================================
+
+# In DEV
 
 
 #============================================================================

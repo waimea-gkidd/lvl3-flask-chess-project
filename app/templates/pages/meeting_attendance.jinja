@@ -1,0 +1,63 @@
+{#=====================================================
+  NM Attendance page
+  - Search, club member list with attendance toggles,
+    add player, then done
+    exact copy of attendance.jinja but for meetings instead of tournaments
+    so straight link to home instead of setup teams 
+=====================================================#}
+
+{% extends 'pages/meeting_base.jinja' %}
+
+
+{% block title %}
+    - Meeting Attendance
+{% endblock %}
+
+
+{% block heading %}Meeting Attendance{% endblock %}
+
+
+{% block meeting_content %}
+
+    {# routes.md #}
+    {# crud.md #}
+    <form method="get" action="/meeting/{{ meeting_id }}/attendance">
+        <label>
+            Search Player
+            <input name="q" type="text" value="{{ search }}">
+        </label>
+        <button>Search</button>
+    </form>
+            {# Scrollable list of members #}
+
+    <section id="members">
+        <h3>Members</h3>
+
+        {# player id goes in the url instead of a hidden input (routes.md) #}
+        {% for player in players %}
+            <form method="post" action="/meeting/{{ meeting_id }}/attendance/{{ player.id }}">
+
+                <span>{{ player.name }}</span>
+                {#jinja.md#}
+                {% if player.id in attending_ids %}
+                    <button>Attending</button>
+                {% else %}
+                    <button>Not attending</button>
+                {% endif %}
+            </form>
+        {% else %}
+            <p>No players found</p>
+        {% endfor %}
+    </section>
+
+    <form method="post" action="/meeting/{{ meeting_id }}/player">
+        <label>
+            New Player Name
+            <input name="name" type="text" required>
+        </label>
+        <button>Add Player</button>
+    </form>
+
+    <a href="/meeting" role="button">Done</a>
+
+{% endblock %}

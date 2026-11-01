@@ -216,7 +216,7 @@ def show_attendance(id):
 
 
 #-----------------------------------------------------------
-# Toggle one player's attendance on/off
+# Toggle player attendance
 #-----------------------------------------------------------
 @app.post("/tournament/<int:id>/attendance/<int:player_id>")
 @login_required
@@ -232,7 +232,7 @@ def toggle_attendance(id, player_id):
             sql = "DELETE FROM members WHERE id=?"
             params = (existing["id"],)
         else:
-            # no attend? = add them to the session (default team = A bc default is needed)
+            # no attending? = add them to the session (default team = A bc default is needed)
             sql = "INSERT INTO members (tournament_id, member_id, team) VALUES (?, ?, 'A')"
             params = (id, player_id)
         db.execute(sql, params)

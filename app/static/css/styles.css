@@ -3,6 +3,27 @@
   By Gideon Kidd
 ===========================================================*/
 
+/* Rami's colour palette (originally called 'secundary' fyi)*/
+:root {
+    /* light to dark blues */
+    --main-1:        #6E9DC3;
+    --main-2:        #4B7DA7;
+    --secondary-2:   #3F6F98;
+    --secondary-3:   #325C80;
+
+    /* Accent (Back buttons in the mockups) */
+    --secondary-1:   #FFAB25;
+
+    /* Background + text */
+    --background-1:  #EAE9D2;   /* page */
+    --background-2:  #FFFFFF;   /* cards, lists */
+    --text:          #333333;
+
+    /* Section colours */
+    --nelson-chess-club: #BBA75C;
+    /*note that Teams tournament colours are actually a mix of the blues as i had to improvise*/ 
+
+}
 /* Colours */
 :root {
     --text-col:         #111;

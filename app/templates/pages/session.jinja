@@ -2,7 +2,6 @@
   TT Session page
   - One session: result and who was on each team
     (public)
-    — Eventually: add a check box for each players payment status
 =====================================================#}
 
 {% extends 'pages/tournament_base.jinja' %}
@@ -34,12 +33,21 @@
     {% else %}
         <p>No result yet</p>
     {% endif %}
-            {#jinja.md both teams split in show_session#}
+            {#jinja.md both teams are split in show_session#}
 
-    <section>
+        <section>
         <h3>Team A</h3>
-        {% for player in team_a %}
-            <p>{{ player.name }}</p>
+        {% for player in team_a %} 
+            {# and winning team adds a second condition, as otherwise whenever an admin is logged in
+                the payment buttons would show. Such as before the result is saved. which I find sub-optimal#}
+            {% if session.logged_in and tournament.winning_team %}
+                <form method="post" action="/tournament/{{ tournament_id }}/payment/{{ player.id }}">
+                    <span>{{ player.name }}</span>
+                    <button>{{ player.payment }}</button>
+                </form>
+            {% else %}
+                <p>{{ player.name }}</p>
+            {% endif %}
         {% else %}
             <p>No players</p>
         {% endfor %}
@@ -48,7 +56,14 @@
     <section>
         <h3>Team B</h3>
         {% for player in team_b %}
-            <p>{{ player.name }}</p>
+            {% if session.logged_in and tournament.winning_team %}
+                <form method="post" action="/tournament/{{ tournament_id }}/payment/{{ player.id }}">
+                    <span>{{ player.name }}</span>
+                    <button>{{ player.payment }}</button>
+                </form>
+            {% else %}
+                <p>{{ player.name }}</p>
+            {% endif %}
         {% else %}
             <p>No players</p>
         {% endfor %}

@@ -64,7 +64,20 @@ def show_tournament_home():
         params = ()
         tournaments = db.execute(sql, params).fetchall()
 
-    return render_template("pages/tournament_home.jinja", tournaments=tournaments)
+    # latest session's semester/phase pre-fill the start form
+    if tournaments:
+        next_semester = tournaments[0]["semester_id"]
+        next_phase = tournaments[0]["phase_id"]
+    else:
+        next_semester = 1
+        next_phase = 1
+
+    return render_template(
+        "pages/tournament_home.jinja",
+        tournaments=tournaments,
+        next_semester=next_semester,
+        next_phase=next_phase,
+    )
 
 
 #-----------------------------------------------------------
@@ -73,7 +86,7 @@ def show_tournament_home():
 @app.get("/tournament/standings")
 def show_standings():
     with connect_db() as db:
-        # sqlite.md - the current semester is the latest TT session's semester
+        # sqlite.md the current semester is the latest TT session's semester
         sql = "SELECT semester_id FROM tournaments WHERE type='TT' ORDER BY id DESC"
         params = ()
         latest = db.execute(sql, params).fetchone()
@@ -83,8 +96,8 @@ def show_standings():
         else:
             semester = None
 
-        # Ancestry Tracker - JOIN gets each players name with their points, highest first
-        # messages project - AS renames points to total
+        # JOIN gets each players name with their points, highest first
+        # messages project AS renames 'points' to 'total'
         sql = """
             SELECT players.name, points.points AS total
             FROM points
@@ -113,9 +126,9 @@ def show_session(id):
         params = (id,)
         tournament = db.execute(sql, params).fetchone()
 
-        # Ancestry Tracker - JOIN gets the names of everyone on team A
+        # JOIN gets names of players on team A
         sql = """
-            SELECT players.name
+            SELECT members.id, members.payment, players.name
             FROM members
             JOIN players ON members.member_id = players.id
             WHERE members.tournament_id=? AND members.team='A'
@@ -125,7 +138,7 @@ def show_session(id):
 
         # same again for team B
         sql = """
-            SELECT players.name
+            SELECT members.id, members.payment, players.name
             FROM members
             JOIN players ON members.member_id = players.id
             WHERE members.tournament_id=? AND members.team='B'
@@ -135,6 +148,7 @@ def show_session(id):
 
     return render_template(
         "pages/session.jinja",
+        tournament_id=id,
         tt_semester=tournament["semester_id"],
         tt_phase=tournament["phase_id"],
         tournament=tournament,
@@ -149,24 +163,27 @@ def show_session(id):
 @app.post("/tournament/new")
 @login_required
 def start_tournament():
+    # forms.md
+    date = request.form.get('date', '').strip()
+    semester = request.form.get('semester', '').strip()
+    phase = request.form.get('phase', '').strip()
+
+    if not date:
+        flash("Session date is required", "error")
+        return redirect("/tournament")
+
+    if not semester.isdigit() or not phase.isdigit():
+        flash("Semester and phase should be whole numbers", "error")
+        return redirect("/tournament")
+
+    date = html.escape(date)
+
     with connect_db() as db:
-        # sqlite.md - carry the last TT session's semester/phase forward
-        sql = "SELECT semester_id, phase_id FROM tournaments WHERE type='TT' ORDER BY id DESC"
-        params = ()
-        last = db.execute(sql, params).fetchone()
-
-        if last:
-            semester_id = last["semester_id"]
-            phase_id = last["phase_id"]
-        else:
-            semester_id = 1
-            phase_id = 1
-
         # sqlite.md add the session and get its new id back
-        sql = "INSERT INTO tournaments (semester_id, phase_id) VALUES (?, ?)"
-        params = (semester_id, phase_id)
+        sql = "INSERT INTO tournaments (semester_id, phase_id, date) VALUES (?, ?, ?)"
+        params = (int(semester), int(phase), date)
         result = db.execute(sql, params)
-        new_id = result.last_row_id
+        new_id = result.lastrowid
 
     flash("New session started", "success")
     return redirect(f"/tournament/{new_id}/attendance")
@@ -280,7 +297,7 @@ def show_teams(id):
         # JOIN gets everyone attending with their names
         # id is the members row, team toggle uses it
         sql = """
-            SELECT members.id, members.team, players.name
+            SELECT members.id, members.team, members.payment, players.name
             FROM members
             JOIN players ON members.member_id = players.id
             WHERE members.tournament_id=?
@@ -320,8 +337,29 @@ def toggle_team(id, row_id):
         db.execute(sql, params)
 
     return redirect(f"/tournament/{id}/teams")
+#-----------------------------------------------------------
+# TT Teams: flip player between Paid and Not Paid
+#-----------------------------------------------------------
+@app.post("/tournament/<int:id>/payment/<int:row_id>")
+@login_required
+def toggle_payment(id, row_id):
+    # routes.md same as toggle_team
+    with connect_db() as db:
+        sql = "SELECT payment FROM members WHERE id=?"
+        params = (row_id,)
+        member = db.execute(sql, params).fetchone()
 
+        # Paid flips to Not Paid, else flips to Paid
+        if member["payment"] == "Paid":
+            payment = "Not Paid"
+        else:
+            payment = "Paid"
 
+        sql = "UPDATE members SET payment=? WHERE id=?"
+        params = (payment, row_id)
+        db.execute(sql, params)
+
+        return redirect(f"/tournament/{id}")
 #-----------------------------------------------------------
 # TT Result: score entry form, or the saved result
 #-----------------------------------------------------------
@@ -354,7 +392,7 @@ def show_result(id):
 @app.post("/tournament/<int:id>/result")
 @login_required
 def save_result(id):
-    # forms.md
+    # forms.md admin enters scores for each team, then the winning team gets +1 point for each player on said winning team
     team_a_score = request.form.get('team_a_score', '').strip()
     team_b_score = request.form.get('team_b_score', '').strip()
 
@@ -365,7 +403,7 @@ def save_result(id):
     team_a_score = int(team_a_score)
     team_b_score = int(team_b_score)
 
-    # Higher score wins same score is a draw
+    # Higher score wins same score = a draw
     if team_a_score > team_b_score:
         winning_team = "A"
     elif team_b_score > team_a_score:
@@ -447,7 +485,7 @@ def show_meeting(id):
 
         # Ancestry Tracker - JOIN gets the names of everyone who came
         sql = """
-            SELECT players.name
+            SELECT members.id, members.payment, players.name
             FROM members
             JOIN players ON members.member_id = players.id
             WHERE members.tournament_id=?
@@ -457,6 +495,7 @@ def show_meeting(id):
 
     return render_template(
         "pages/meeting.jinja",
+        meeting_id=id,
         meeting_date=meeting["date"],
         attended=attended,
     )
@@ -553,6 +592,28 @@ def toggle_meeting_attendance(id, player_id):
         db.execute(sql, params)
 
     return redirect(f"/meeting/{id}/attendance")
+#-----------------------------------------------------------
+# Flip one player's meeting payment between Paid and Not Paid
+#-----------------------------------------------------------
+@app.post("/meeting/<int:id>/payment/<int:row_id>")
+@login_required
+def toggle_meeting_payment(id, row_id):
+    # same as toggle_payment, route to meeting page instead
+    with connect_db() as db:
+        sql = "SELECT payment FROM members WHERE id=?"
+        params = (row_id,)
+        member = db.execute(sql, params).fetchone()
+
+        if member["payment"] == "Paid":
+            payment = "Not Paid"
+        else:
+            payment = "Paid"
+
+        sql = "UPDATE members SET payment=? WHERE id=?"
+        params = (payment, row_id)
+        db.execute(sql, params)
+
+    return redirect(f"/meeting/{id}")
 
 
 #-----------------------------------------------------------

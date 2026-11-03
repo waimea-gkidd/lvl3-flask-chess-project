@@ -21,7 +21,10 @@
     <section>
         <h3>Attended</h3>
         {% for player in attended %}
-            <p>{{ player.name }}</p>
+            <form method="post" action="/meeting/{{ meeting_id }}/payment/{{ player.id }}">
+                <span>{{ player.name }}</span>
+                <button>{{ player.payment }}</button>
+            </form>
         {% else %}
             <p>No one attended</p>
         {% endfor %}

@@ -2,7 +2,7 @@ services:
   web:
     build: .
     ports:
-      - "8888:8888"  # maps port 8888 in the container to port 8888 on the host
+      - "9003:9003"  # maps port 8888 in the container to port 8888 on the host
     volumes:
       - .:/app        # live-reloads code changes without rebuilding
     env_file:

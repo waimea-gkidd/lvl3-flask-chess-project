@@ -23,6 +23,19 @@
 
     {% if session.logged_in %}
         <form method="post" action="/tournament/new">
+            {# forms.md type="date" gives a calendar, same as NM #}
+            <label>
+                Date
+                <input name="date" type="date" required>
+            </label>
+            <label>
+                Semester
+                <input name="semester" type="text" value="{{ next_semester }}" required>
+            </label>
+            <label>
+                Phase
+                <input name="phase" type="text" value="{{ next_phase }}" required>
+            </label>
             <button>Start New Session</button>
         </form>
     {% endif %}
@@ -41,7 +54,7 @@
                 {% if tournament.date %}
                     <p>{{ tournament.date }}</p>
                 {% endif %}
-            {#jinja.ma saved result = shows score + winner#}
+            {#jinja.ma saved result = shows score + winner(ing team)#}
 
                 {% if tournament.winning_team %}
                     <p>Team A {{ tournament.team_a_score }} - {{ tournament.team_b_score }} Team B</p>

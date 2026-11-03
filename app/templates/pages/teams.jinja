@@ -11,7 +11,7 @@
     - TT Teams
 {% endblock %}
 
-{#Scrollable list from attendace.jinja#}
+
 {% block heading %}TT Teams{% endblock %}
 
 
@@ -21,12 +21,12 @@
         <h3>Players</h3>
 
         {# toggle_team #}
-        {# members row id goes in the url (routes.md) #}
+        {# members row id goes to the url (routes.md) #}
         {% for member in members %}
             <form method="post" action="/tournament/{{ tournament_id }}/team/{{ member.id }}">
 
                 <span>{{ member.name }}</span>
-{#jinja.md buttons show current teams#}
+                {#jinja.md buttons show current teams of players#}
                 {% if member.team == "A" %}
                     <button>Team A</button>
                 {% else %}

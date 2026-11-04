@@ -24,138 +24,118 @@
     /*note that Teams tournament colours are actually a mix of the blues as i had to improvise*/ 
 
 }
-/* Colours */
-:root {
-    --text-col:         #111;
 
-    --back-col:         #eee;
-    --back-col-panel:   #fff;
-
-    --border-col:       #355;
-
-    --accent-col:       #e43;
-}
-
-
-/* Overall Layout -----------------------------------------------*/
-
-html {
-    background-color: var(--back-col);
-    color: var(--text-col);
-
+/*=====================================================
+  Page
+=====================================================*/
+body {
+    background-color: var(--background-1);
+    color: var(--text);
     font-family: system-ui, sans-serif;
 }
 
-
-body {
-    min-height: 100dvh;  /* Page always height of screen  */
-
-}
-
-
 main {
-    max-width: 60rem;
-    margin-inline: auto; /* Center content */
-
+    max-width: 40rem;
+    margin: 0 auto;
     padding: 1rem;
 }
 
-
-
-/* Page Headings -----------------------------------------------*/
-
-main > h2 {
-    font-size: 2rem;
-    text-align: center;
-    margin-block: 2rem;
+h2, h3 {
+    margin-block: 1rem 0.5rem;
 }
 
 
-/* Forms --------------------------------------------------*/
-/* creatures project */
-
-form {
+/*=====================================================
+  Header + nav
+=====================================================*/
+header {
     display: flex;
-    flex-direction: column; /* Stacks buttons ontop of one another */
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background-color: var(--secondary-3);
+    color: var(--background-2);
+}
 
-    gap: 1rem;
+.logo {
+    height: 3rem;
+}
 
-    max-width: 20rem;
-    margin-inline: auto; /* center content */
-
-    padding: 1rem;
-
-    border: 2px solid var(--border-col);
+nav a {
+    color: var(--background-2);
+    margin-left: 1rem;
 }
 
 
-/* Club Members list --------------------------------------------*/
-/* attendance and teams page */
+/*=====================================================
+  Buttons (and links that look like buttons)
+=====================================================*/
+button,
+[role="button"] {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.3rem;
+    background-color: var(--secondary-2);
+    color: var(--background-2);
+    text-decoration: none;
+    cursor: pointer;
+}
 
-#members {
-    max-width: 30rem;
-    margin-inline: auto;
-
-    /* from style sheet. creates a scrollable container instead of letting contect run off the page */
-
-    max-height: 25rem;
-    overflow-y: auto;
-
-    form {
-        flex-direction: row;
-        align-items: center;
-
-        span {
-            flex: 1;
-        }
-    }
+button:hover,
+[role="button"]:hover {
+    background-color: var(--secondary-3);
 }
 
 
-/* Cards (home page + tournament home) --------------------------*/
+/*=====================================================
+  Forms
+=====================================================*/
+form {
+    margin-block: 1rem;
+}
 
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+input {
+    display: block;
+    width: 100%;
+    padding: 0.4rem;
+    margin-top: 0.2rem;
+    border: 1px solid var(--main-1);
+    border-radius: 0.3rem;
+}
+
+
+/*=====================================================
+  Cards (home, TT home, NM home)
+=====================================================*/
 #cards {
     display: grid;
-    gap: 2rem;
-    grid-template-columns: 1fr;
+    gap: 1rem;
+}
 
-    @media (width >= 500px) {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    @media (width >= 800px) {
-        grid-template-columns: 1fr 1fr 1fr;
-    }
-
-    .card {
-        padding: 1rem;
-
-        background-color: var(--back-col-panel);
-        border: 2px solid var(--border-col);
-        border-radius: 0.5rem;
-    }
+.card {
+    padding: 1rem;
+    background-color: var(--background-2);
+    border: 2px solid var(--main-2);
+    border-radius: 0.5rem;
 }
 
 
-/* Header & Nav -----------------------------------------------*/
-
-body > header {
+/*=====================================================
+  Player rows (attendance, teams, session, meeting)
+  - one form per player: name on the left, button on the right
+=====================================================*/
+section form {
     display: flex;
-    gap: 1rem;
-    align-items: center;
     justify-content: space-between;
-    padding: 1rem;
-
-    .logo {
-        height: 3rem;
-    }
-
-    nav {
-        display: flex;
-        gap: 1rem;
-
-        a {
-            color: var(--accent-col);
-        }
-    }
+    align-items: center;
+    margin: 0;
+    padding: 0.5rem;
+    background-color: var(--background-2);
+    border-bottom: 1px solid var(--background-1);
 }

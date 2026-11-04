@@ -9,25 +9,17 @@ Develop a design for the database and a UI prototype that simulates the key func
 
 **Edit these goals as needed**
 
-- Design the database:
-    - Tables
-    - Fields / types
-    - Primary keys
-    - Default / nullable values
-    - Relationships (foreign keys)
-- Design the UI
-    - Key pages
-    - User interactions and 'flow'
-    - Page layouts / features
-    - Colour palette
-    - Etc.
-
+Design the database: 
+players, members, tournaments, with keys and relationships in DrawSQL
+Learn how Rami moves through a meeting, for TTs, normal meetings and classes
+Design every key screen (yes. EVERY screen) in Penpot, mobile first
+Apply the Chess in Nelson colour palette
+Get Rami's sign-off before writing any code
 
 ## Initial Database Design
 
-Replace this text with notes regarding the DB design.
 
-![DB Design](screenshots/placeholder.png)
+![DB Design](screenshots/initial.png)
 
 
 ### Required Data Input

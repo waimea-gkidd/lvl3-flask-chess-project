@@ -1,7 +1,7 @@
 title: Chess db system
-description: A system for ...
+description: A system for tracking chess tournaments, players, and results.
 author: Gideon Kidd
 
-development: true
+development: false
 picotheme: azure
 

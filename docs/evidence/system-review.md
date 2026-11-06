@@ -2,7 +2,7 @@
 
 ## Addressing Relevant Implications
 
-### NAME OF Privacy
+### Privacy
 
 The Db only keeps player names, attendance and payment status'. Test data uses fake players. 
 
@@ -11,13 +11,13 @@ Normal meetings and payment status' only show when logged in. Rami only wanted t
 Player names do show on the public pages. However, since there are no real privacy concerns with simply having names, this isnt an issue. 
 
 
-### NAME OF Functionality 
+### Functionality 
 
 A whole normal meeting and Tt system both run through how Rami would during a session. 
 
 Old semester rankings can still be viewed after the fact. 
 
-### NAME OF Usability
+### Usability
 
 Built for mobile. Fits the screen perfectly. 
 
@@ -27,11 +27,11 @@ Rami first commented that getting to meetings was "quite a few steps" initially.
 
 Date box gives a callendar instead of manually entering dates. 
 
-### NAME OF Security
+### Security
 
 Password hashed, never stated in plain text. 
 
-### NAME OF End user 
+### End user 
 
 built around rami's emails: a phase is one TT meeting and semsester is a period over 6 months. Players dont register themselves, and normal meetings only track atendance and payemnts. 
 

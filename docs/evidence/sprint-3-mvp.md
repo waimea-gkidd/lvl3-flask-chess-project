@@ -10,58 +10,40 @@ Continue to develop the web application to the point that it provides all key fu
 **Edit these goals as needed**
 
 - Create the following web pages:
-    - Form for ...
-    - Etc.
+    - Form for Normal meeting home, with a form to start a meeting
+    - Meeting attendance, search, toggles to add player/payments
 - Develop SQL database queries to:
-    - Add a new ...
-    - Etc.
+    - Add a new meeting to tournaments (table) with type NM 
+    - add and remove attendees in members (table)
+    - Update payment status'
 
 
-## Testing FEATURE NAME HERE
+## Testing NM route 
 
-Replace this text with notes about what you are testing, how you tested it, and the outcome of the testing
+Rami needs a system for every second wednesday when we "dont have a tournament or TT scheduled." This system is NM (normal meetings) wherein the only thing that needs to be tracked are the players who went the date. 
 
-**PLACE SCREENSHOTS AND/OR ANIMATED GIFS OF THE TESTING HERE**
-
-![Placeholder](screenshots/placeholder.png)
-
-### Changes / Improvements
-
-Replace this text with notes any improvements you made as a result of the testing.
-
-**PLACE SCREENSHOTS AND/OR ANIMATED GIFS OF THE IMPROVED SYSTEM HERE**
-
-
-## Testing FEATURE NAME HERE
-
-Replace this text with notes about what you are testing, how you tested it, and the outcome of the testing
-
-**PLACE SCREENSHOTS AND/OR ANIMATED GIFS OF THE TESTING HERE**
+![NM](screenshots/NoNM.png)
 
 ### Changes / Improvements
 
-Replace this text with notes any improvements you made as a result of the testing.
+Added routes for NM (e.g. meeting, attendance)
 
-**PLACE SCREENSHOTS AND/OR ANIMATED GIFS OF THE IMPROVED SYSTEM HERE**
+![Nm](screenshots/addedNM.png)
 
 
-## Testing FEATURE NAME HERE
+## Testing Payments
 
-Replace this text with notes about what you are testing, how you tested it, and the outcome of the testing
+testing whether admin can check who still owes money for a meeting 
 
-**PLACE SCREENSHOTS AND/OR ANIMATED GIFS OF THE TESTING HERE**
+![Nm](screenshots/testPay.png)
 
 ### Changes / Improvements
 
-Replace this text with notes any improvements you made as a result of the testing.
+added toggle for payments to NM cards; paid/nt paid
 
-**PLACE SCREENSHOTS AND/OR ANIMATED GIFS OF THE IMPROVED SYSTEM HERE**
-
-
-## ETC...
-
+![Nm](screenshots/workingPay.png)
 
 ## Sprint Review
 
-Replace this text with a statement about how the sprint has moved the project forward - key success point, any things that didn't go so well, etc.
+This sprint got Normal Meetings working; before this the meeting route was just full of 404's. Rami can now start a meeting, mark who came and see who still owes him, which is what he wanted payments for as a whole. Along with the TT workflow, that covers the main things he does during a club session.
 

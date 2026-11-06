@@ -92,9 +92,11 @@ def show_standings():
         latest = db.execute(sql, params).fetchone()
 
         if latest:
-            semester = latest["semester_id"]
+            current = latest["semester_id"]
         else:
-            semester = None
+            current = None
+        # routes.md shows an older semester, otherwise the current one
+        semester = request.args.get('semester', current)
 
         # JOIN gets each players name with their points, highest first
         # messages project AS renames 'points' to 'total'
@@ -108,7 +110,7 @@ def show_standings():
         params = (semester,)
         standings = db.execute(sql, params).fetchall()
 
-    return render_template("pages/standings.jinja", semester=semester, standings=standings)
+    return render_template("pages/standings.jinja", semester=semester, current=current, standings=standings)
 
 
 #-----------------------------------------------------------

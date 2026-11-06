@@ -9,56 +9,52 @@ Develop the system until it is fully featured, with a refined UI and it satisfie
 
 **Edit these goals as needed**
 
-- Refine the design and UI of the website
-- Refine the user experience (UX) of the system
+- Refine the design and UI of the website: Use Rami's colour pallete 
+- Refine the user experience (UX) of the system to make it work for his phone
 - Perform final, full-system testing
 
 
-## Testing FEATURE NAME HERE
+## Testing NM phone view
 
-Replace this text with notes about what you are testing, how you tested it, and the outcome of the testing
+Uses Rami's pallete on a phone 
 
-**PLACE SCREENSHOTS AND/OR ANIMATED GIFS OF THE TESTING HERE**
-
-![Placeholder](screenshots/placeholder.png)
+![NM](screenshots/NMphone.png)
 
 ### Changes / Improvements
 
-Replace this text with notes any improvements you made as a result of the testing.
+rewrote styles.css to fit Rami's colour pallete 
 
-**PLACE SCREENSHOTS AND/OR ANIMATED GIFS OF THE IMPROVED SYSTEM HERE**
-
-
-## Testing FEATURE NAME HERE
-
-Replace this text with notes about what you are testing, how you tested it, and the outcome of the testing
-
-**PLACE SCREENSHOTS AND/OR ANIMATED GIFS OF THE TESTING HERE**
-
-### Changes / Improvements
-
-Replace this text with notes any improvements you made as a result of the testing.
-
-**PLACE SCREENSHOTS AND/OR ANIMATED GIFS OF THE IMPROVED SYSTEM HERE**
+![NM](screenshots/NMphoneColour.png)
 
 
-## Testing FEATURE NAME HERE
+## Testing player payments
 
-Replace this text with notes about what you are testing, how you tested it, and the outcome of the testing
+should be same as the TT cards for payment: one row per player with a toggle for payments. 
 
-**PLACE SCREENSHOTS AND/OR ANIMATED GIFS OF THE TESTING HERE**
+![NM](screenshots/playerPayment.png)
 
 ### Changes / Improvements
 
-Replace this text with notes any improvements you made as a result of the testing.
+moved the css style into section form so that attendance, teams, session, etc along with all meetings pages actually match. 
 
-**PLACE SCREENSHOTS AND/OR ANIMATED GIFS OF THE IMPROVED SYSTEM HERE**
+![NM](screenshots/playerPaymentColour.png)
 
 
-## ETC...
+## Testing standings/end of semester
+
+Testing what happens to player rankings when a new semester starts.
+
+![NM](screenshots/standingcombined.png)
+
+### Changes / Improvements
+
+Added a link for each semester on the standings page. Of course works logged out too. So not just admin.
+![NM](screenshots/standingsplit.png)
+
+
+
 
 
 ## Sprint Review
 
-Replace this text with a statement about how the sprint has moved the project forward - key success point, any things that didn't go so well, etc.
-
+This sprint made the app actually look something of Rami's own creation as well as work on his phone. One rewrite of styles sorted the colours, the header and the player rows. Testing the end of a semester also showed that old rankings do in fact dissappear once a new semester is started.

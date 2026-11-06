@@ -19,80 +19,81 @@ Get Rami's sign-off before writing any code
 ## Initial Database Design
 
 
-![DB Design](screenshots/initial.png)
+![DB Design](screenshots/DrawSQL.png)
 
 
 ### Required Data Input
 
-Replace this text with a description of what data will be input, and where / how it will be obtained.
-
+Rami types everything: attendance, team choices, results, new player names and payment status. Current data sits
+in his Google Sheet. Players don't enter anything (as range of technical skill): "they show up, pay, and play."
 ### Required Data Output
 
-Replace this text with a description of the outputs for the system - what types of data will be displayed?
+Public: TT standings and past sessions. Rami only: attendance, teams, payment status and normal meetings.
 
 ### Required Data Processing
 
-Replace this text with a description of how the data will be processed to achieve the desired output(s) - any processes / formulae?
-
+The winning team sets each player's points (1 for a win, 0 for a loss, via Rami's rule). A player's total is the sum for
+the semester, shown highest first.
 
 ## UI 'Flow'
+(https://design.penpot.app/?screen=viewer&file-id=f0485fb1-4e63-8165-8008-3908ecdf26ed&page-id=f0485fb1-4e63-8165-8008-3908ecdf26ee&section=interactions&index=0&share-id=8eb0d2a8-0b64-4a30-ae12-a8f9f2afbf5f)
+![DB Design](screenshots/initial.png)
 
-The first stage of prototyping was to explore how the UI might 'flow' between states, based on the required functionality.
-
-This Figma demo shows the initial design for the UI 'flow':
-
-**FIGMA FLOW - PLACE THE FIGMA EMBED CODE HERE - MAKE SURE IT IS SET SO THAT EVERYONE CAN ACCESS IT**
+**Penpot FLOW - PLACE THE Penpot EMBED CODE HERE - MAKE SURE IT IS SET SO THAT EVERYONE CAN ACCESS IT**
 
 ### Testing
 
-Replace this text with notes about what you did to test the UI flow and the outcome of the testing.
+"to take attendance I need to go through Classes > View Classes > select the course > presumably select
+the venue > Take Attendance. It feels like quite a few steps for something I'll be doing all the time."
+
+"Once I'm on the attendance screen, I'd like to see all the students and have another + button to add a new
+student."
+
+"A semester is the 6-month duration of each Teams Tournament. A phase refers to each individual Teams
+Tournament meeting." (found that confusing but aight)
 
 ### Changes / Improvements
 
-Replace this text with notes any improvements you made as a result of the testing.
+Home lists every activity at once, with a + in the top right, and classes
+in the order he gave
+
+Attendance lists with toggles, plus Add Player and Add
+Student
+
+Headers has Phase 7/10, Semester 1/2 (hard coded atm)
 
 *IMPROVED FIGMA FLOW - PLACE THE FIGMA EMBED CODE HERE - MAKE SURE IT IS SET SO THAT EVERYONE CAN ACCESS IT*
 
 
 ## Initial UI Prototype
 
-The next stage of prototyping was to develop the layout for each screen of the UI.
-
-This Figma demo shows the initial layout design for the UI:
+(https://design.penpot.app/?screen=viewer&file-id=3be9e5e1-190f-8090-8008-6f22d76b3a53&page-id=3be9e5e1-190f-8090-8008-6f22d76b3a54&section=interactions&index=0&share-id=81f57451-85cc-819d-8008-7b29f832a3e2)
+![DB Design](screenshots/final_penpot.png)
 
 *FIGMA PROTOTYPE - PLACE THE FIGMA EMBED CODE HERE - MAKE SURE IT IS SET SO THAT EVERYONE CAN ACCESS IT*
 
 ### Testing
 
-Replace this text with notes about what you did to test the UI flow and the outcome of the testing.
+Rami replied on the 19th of August with the following: 
+
+"Members shoudnt be able to register themselves."
+
+"Unlike most real tournaments a BYE player doesnt get a point."
+(doesnt matter as team score entered manually anyway)
+
+"I want the process to be as simple as possible. Players show up, and play. No extra steps."
 
 ### Changes / Improvements
 
-Replace this text with notes any improvements you made as a result of the testing.
+Note that the following were agreed by email and never redrawn: 
 
-*FIGMA IMPROVED PROTOTYPE - PLACE THE FIGMA EMBED CODE HERE - MAKE SURE IT IS SET SO THAT EVERYONE CAN ACCESS IT*
+NCC (nelson chess club) join club removed.
 
+To keep things as simple as possible, instead of having captains and tracking all games I suggested simply having two teams, tracking the score in person, ane enter results manually. 
 
-## Refined UI Prototype
-
-Having established the layout of the UI screens, the prototype was refined visually, in terms of colour, fonts, etc.
-
-This Figma demo shows the UI with refinements applied:
-
-*FIGMA REFINED PROTOTYPE - PLACE THE FIGMA EMBED CODE HERE - MAKE SURE IT IS SET SO THAT EVERYONE CAN ACCESS IT*
-
-### Testing
-
-Replace this text with notes about what you did to test the UI flow and the outcome of the testing.
-
-### Changes / Improvements
-
-Replace this text with notes any improvements you made as a result of the testing.
-
-*FIGMA IMPROVED REFINED PROTOTYPE - PLACE THE FIGMA EMBED CODE HERE - MAKE SURE IT IS SET SO THAT EVERYONE CAN ACCESS IT*
-
+Classes: Removed as we agreed I would focus on Teams tournaments and Normal meetings first. 
 
 ## Sprint Review
 
-Replace this text with a statement about how the sprint has moved the project forward - key success point, any things that didn't go so well, etc.
+I had quite a lot of push back trying to get rid of captains and having no need for Rami's google form (instead of simply making another form). However, after a few trial rounds, he was happy with the out come of my design. 
 

@@ -9,57 +9,52 @@ Implement the database, populated with test data. Create queries that retrieve t
 
 **Edit these goals as needed**
 
-- Implement the database
+- Implement the database: users, players, members, tournaments
 - Add test data to the database
 - Create the following web pages:
-    - Home pages showing...
-    - Details page for ...
-    - Etc.
+    - Home pages showing Teams Tournament info
 - Develop SQL database queries to:
-    - Retrieve all ...
-    - Retrieve specific ...
-    - Etc.
+    - Retrieve all the latest tournament and a user by username
+    - protect admin routes with a log in. 
 
 
-## Testing FEATURE NAME HERE
+## Testing new session routes
 
-Replace this text with notes about what you are testing, how you tested it, and the outcome of the testing
+testing whether /tournaments works with
 
-**PLACE SCREENSHOTS AND/OR ANIMATED GIFS OF THE TESTING HERE**
 
-![Placeholder](screenshots/placeholder.png)
+![tournament](screenshots/Not_logged_in.png)
 
 ### Changes / Improvements
 
-Replace this text with notes any improvements you made as a result of the testing.
+Made a form so that Rami can add date manually rather than the previous hard-coded date
 
-**PLACE SCREENSHOTS AND/OR ANIMATED GIFS OF THE IMPROVED SYSTEM HERE**
+![tournament](screenshots/Adddform.png)
 
+## Testing session card
 
-## Testing FEATURE NAME HERE
+Testing that the card for each session produce the desired outcome
 
-Replace this text with notes about what you are testing, how you tested it, and the outcome of the testing
-
-**PLACE SCREENSHOTS AND/OR ANIMATED GIFS OF THE TESTING HERE**
-
-### Changes / Improvements
-
-Replace this text with notes any improvements you made as a result of the testing.
-
-**PLACE SCREENSHOTS AND/OR ANIMATED GIFS OF THE IMPROVED SYSTEM HERE**
-
-
-## Testing FEATURE NAME HERE
-
-Replace this text with notes about what you are testing, how you tested it, and the outcome of the testing
-
-**PLACE SCREENSHOTS AND/OR ANIMATED GIFS OF THE TESTING HERE**
+![tournament](screenshots/view_session.png)
 
 ### Changes / Improvements
 
-Replace this text with notes any improvements you made as a result of the testing.
+each card got a view session route so that past info is accesable 
 
-**PLACE SCREENSHOTS AND/OR ANIMATED GIFS OF THE IMPROVED SYSTEM HERE**
+![tournament](screenshots/view_card.png)
+
+
+## Testing payments
+
+Rami wanted a systen to track payments. This system has been sitting idle in the DB for a while. 
+
+![tournament](screenshots/nopayments.png)
+
+### Changes / Improvements
+
+added paid/not paid toggle for payment status' of players 
+
+![tournament](screenshots/addedpayments.png)
 
 
 ## ETC...
@@ -67,5 +62,5 @@ Replace this text with notes any improvements you made as a result of the testin
 
 ## Sprint Review
 
-Replace this text with a statement about how the sprint has moved the project forward - key success point, any things that didn't go so well, etc.
+This sprint tackeled the DB, test data and login, pages, etc. which gave me a base to build the rest on. Testing found 3 real problems: new sessions had no real date (originally hard coded as I just wanted to get a draft done),  session cards didnt have any way to see previous info, payment was in DB but never really used. All 3 fixed, Rami happy with simplicity and workflow of all. 
 

@@ -2,13 +2,15 @@
 
 ## Project Description
 
-This is an app that ...
+This is an app that lets Rami, the owner of Chess in Nelson, run his Teams Tournaments and normal club meetings from his phone, instead of tracking everything by hand in a spreadsheet.
 
 The app has the following key features:
-- Feature one
-- Feature two
-- Feature three
-- ...
+- Public teams tournament results and standings including past semesters
+- Admin Team tournament sessions and attendance. 
+- Admin login. 
+
+## Live Site 
+The site is hosted on **Render.com** and can be [accessed live at this link](https://lvl3-flask-chess-project.onrender.com/)
 
 
 ## Supporting Documents
@@ -31,14 +33,9 @@ Project Evidence
 The following user accounts have been created to demonstrate the features of the system:
 
 Test User 1:
-- Username: xxxxx
-- Password: xxxxx
+- Username: testington42
+- Password: test
 
-Test User 2:
-- Username: xxxxx
-- Password: xxxxx
-
-...
 
 
 ## Technologies Used

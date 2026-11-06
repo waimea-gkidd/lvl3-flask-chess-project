@@ -36,10 +36,10 @@ The winning team sets each player's points (1 for a win, 0 for a loss, via Rami'
 the semester, shown highest first.
 
 ## UI 'Flow'
-[View the Penpot flow](https://design.penpot.app/?screen=viewer&file-id=f0485fb1-4e63-8165-8008-3908ecdf26ed&page-id=f0485fb1-4e63-8165-8008-3908ecdf26ee&section=interactions&index=0&share-id=8eb0d2a8-0b64-4a30-ae12-a8f9f2afbf5f)
+
 ![DB Design](screenshots/initial.png)
 
-**Penpot FLOW - PLACE THE Penpot EMBED CODE HERE - MAKE SURE IT IS SET SO THAT EVERYONE CAN ACCESS IT**
+[View the Penpot flow](https://design.penpot.app/?screen=viewer&file-id=f0485fb1-4e63-8165-8008-3908ecdf26ed&page-id=f0485fb1-4e63-8165-8008-3908ecdf26ee&section=interactions&index=0&share-id=8eb0d2a8-0b64-4a30-ae12-a8f9f2afbf5f)
 
 ### Testing
 
@@ -67,10 +67,10 @@ Headers has Phase 7/10, Semester 1/2 (hard coded atm)
 
 ## Initial UI Prototype
 
-[View the Penpot prototype](https://design.penpot.app/?screen=viewer&file-id=3be9e5e1-190f-8090-8008-6f22d76b3a53&page-id=3be9e5e1-190f-8090-8008-6f22d76b3a54&section=interactions&index=0&share-id=81f57451-85cc-819d-8008-7b29f832a3e2)
 ![DB Design](screenshots/final_penpot.png)
 
-*FIGMA PROTOTYPE - PLACE THE FIGMA EMBED CODE HERE - MAKE SURE IT IS SET SO THAT EVERYONE CAN ACCESS IT*
+[View the Penpot prototype]https://design.penpot.app/?screen=viewer&file-id=3be9e5e1-190f-8090-8008-6f22d76b3a53&page-id=3be9e5e1-190f-8090-8008-6f22d76b3a54&section=interactions&index=0&share-id=72605ecf-5d84-476a-a7f9-9bc446185a68
+
 
 ### Testing
 
